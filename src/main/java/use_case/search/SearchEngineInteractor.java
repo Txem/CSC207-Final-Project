@@ -7,7 +7,7 @@ import entity.Recipe;
 /**
  * The Search Interactor.
  */
-public class SearchEngineInteractor implements SearchEngineInputBoudary {
+public class SearchEngineInteractor implements SearchEngineInputBoundary {
     private final SearchEngineUserDataAccessInterface userDataAccessObject;
     private final SearchEngineOutputBoundary searchEnginePresenter;
 
