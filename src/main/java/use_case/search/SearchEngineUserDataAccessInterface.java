@@ -1,11 +1,20 @@
 package use_case.search;
 
-import entity.User;
+import java.util.List;
+
+import entity.Recipe;
 
 /**
  * Interface for search engine.
  */
-public class SearchEngineUserDataAccessInterface {
+public interface SearchEngineUserDataAccessInterface {
+
+    /**
+     * Return whether there is a response for the keyword.
+     * @param keyword the keyword user type in.
+     * @return a boolean represent whether there is a keyword.
+     */
+    Boolean existByKeyword(String keyword);
 
     /**
      * Returns the keyword of the curren keyword of searchEngine.
@@ -14,8 +23,15 @@ public class SearchEngineUserDataAccessInterface {
     String getCurrentKeyWord();
 
     /**
-     * Sets the username indicating who is the current user of the application.
-     * @param username the new current username
+     * Get the recipe response from the api.
+     * @param keyword the keyword from the user type
+     * @return the json response (convert to recipe class).
      */
-    void setCurrentUsername(String username);
+    List<Recipe> getRecipeList(String keyword);
+
+    /**
+     * Sets the username indicating who is the current user of the application.
+     * @param keyword the new current username
+     */
+    void setCurrentKeyword(String keyword);
 }

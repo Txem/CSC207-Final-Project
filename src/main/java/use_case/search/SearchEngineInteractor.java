@@ -1,44 +1,34 @@
 package use_case.search;
 
-import entity.User;
-import use_case.login.LoginInputData;
-import use_case.login.LoginOutputBoundary;
-import use_case.login.LoginOutputData;
-import use_case.login.LoginUserDataAccessInterface;
+import java.util.List;
+
+import entity.Recipe;
 
 /**
  * The Search Interactor.
  */
-public class SearchEngineInteractor {
+public class SearchEngineInteractor implements SearchEngineInputBoudary {
     private final SearchEngineUserDataAccessInterface userDataAccessObject;
-    private final LoginOutputBoundary loginPresenter;
+    private final SearchEngineOutputBoundary searchEnginePresenter;
 
-    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary) {
+    public SearchEngineInteractor(SearchEngineUserDataAccessInterface userDataAccessInterface,
+                           SearchEngineOutputBoundary searchEngineOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
-        this.loginPresenter = loginOutputBoundary;
+        this.searchEnginePresenter = searchEngineOutputBoundary;
     }
 
     @Override
-    public void execute(LoginInputData loginInputData) {
-        final String username = loginInputData.getUsername();
-        final String password = loginInputData.getPassword();
-        if (!userDataAccessObject.existsByName(username)) {
-            loginPresenter.prepareFailView(username + ": Account does not exist.");
+    public void execute(SearchEngineInputData searchEngineInputData) {
+        final String keyword = searchEngineInputData.getKeyword();
+        if (!userDataAccessObject.existByKeyword(keyword)) {
+            searchEnginePresenter.prepareErrorView(keyword + " can't be found in current database ");
         }
         else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
-            if (!password.equals(pwd)) {
-                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
-            }
-            else {
-
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
-
-                userDataAccessObject.setCurrentUsername(user.getName());
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
-                loginPresenter.prepareSuccessView(loginOutputData);
-            }
+            final List<Recipe> recipes = userDataAccessObject.getRecipeList(keyword);
+            userDataAccessObject.setCurrentKeyword(keyword);
+            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes, true);
+            searchEnginePresenter.prepareSuccessView(searchEngineOutputData);
         }
     }
 }
+
