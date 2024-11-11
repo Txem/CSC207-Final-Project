@@ -1,0 +1,176 @@
+{
+  "recipes": [
+    {
+      "user": "user1",
+      "tag": "my favoraite",
+      "uri": "http://example.com/recipe1",
+      "label": "Classic Spaghetti Bolognese",
+      "image": "http://example.com/image1.jpg",
+      "REGULAR": {
+        "url": "http://example.com/image1.jpg",
+        "width": 800,
+        "height": 600
+      },
+      "source": "Chef's Kitchen",
+      "url": "http://example.com/recipe1-details",
+      "shareAs": "http://example.com/share/recipe1",
+      "yield": 4,
+      "dietLabels": ["Low-Carb", "High-Protein"],
+      "healthLabels": ["Gluten-Free", "Nut-Free"],
+      "cautions": ["Shellfish"],
+      "ingredientLines": [
+        "200g ground beef",
+        "100g spaghetti",
+        "50g tomato sauce"
+      ],
+      "ingredients": [
+        {
+          "text": "ground beef",
+          "quantity": 200,
+          "measure": "g",
+          "food": "beef",
+          "weight": 200,
+          "foodId": "food_bf1"
+        },
+        {
+          "text": "spaghetti",
+          "quantity": 100,
+          "measure": "g",
+          "food": "spaghetti",
+          "weight": 100,
+          "foodId": "food_sp1"
+        },
+        {
+          "text": "tomato sauce",
+          "quantity": 50,
+          "measure": "g",
+          "food": "tomato sauce",
+          "weight": 50,
+          "foodId": "food_ts1"
+        }
+      ],
+      "calories": 500,
+      "glycemicIndex": 45,
+      "inflammatoryIndex": 3,
+      "totalCO2Emissions": 8,
+      "co2EmissionsClass": "B",
+      "totalWeight": 350,
+      "cuisineType": ["Italian"],
+      "mealType": ["Dinner"]
+    },
+    {
+      "user": ["user3"],
+      "uri": "http://example.com/recipe2",
+      "label": "Vegetable Stir Fry",
+      "image": "http://example.com/image2.jpg",
+      "REGULAR": {
+        "url": "http://example.com/image2.jpg",
+        "width": 800,
+        "height": 600
+      },
+      "source": "Veggie Delight",
+      "url": "http://example.com/recipe2-details",
+      "shareAs": "http://example.com/share/recipe2",
+      "yield": 2,
+      "dietLabels": ["Low-Fat"],
+      "healthLabels": ["Vegan", "Dairy-Free"],
+      "cautions": ["Soy"],
+      "ingredientLines": [
+        "1 cup broccoli",
+        "1 cup bell peppers",
+        "1 tbsp soy sauce"
+      ],
+      "ingredients": [
+        {
+          "text": "broccoli",
+          "quantity": 1,
+          "measure": "cup",
+          "food": "broccoli",
+          "weight": 90,
+          "foodId": "food_br1"
+        },
+        {
+          "text": "bell peppers",
+          "quantity": 1,
+          "measure": "cup",
+          "food": "bell peppers",
+          "weight": 92,
+          "foodId": "food_bp1"
+        },
+        {
+          "text": "soy sauce",
+          "quantity": 1,
+          "measure": "tbsp",
+          "food": "soy sauce",
+          "weight": 16,
+          "foodId": "food_ss1"
+        }
+      ],
+      "calories": 150,
+      "glycemicIndex": 30,
+      "inflammatoryIndex": 2,
+      "totalCO2Emissions": 5,
+      "co2EmissionsClass": "A",
+      "totalWeight": 198,
+      "cuisineType": ["Asian"],
+      "mealType": ["Lunch"]
+    },
+    {
+      "user": ["user4", "user5"],
+      "uri": "http://example.com/recipe3",
+      "label": "Avocado Toast",
+      "image": "http://example.com/image3.jpg",
+      "REGULAR": {
+        "url": "http://example.com/image3.jpg",
+        "width": 800,
+        "height": 600
+      },
+      "source": "Healthy Eats",
+      "url": "http://example.com/recipe3-details",
+      "shareAs": "http://example.com/share/recipe3",
+      "yield": 1,
+      "dietLabels": ["High-Fiber"],
+      "healthLabels": ["Vegetarian"],
+      "cautions": ["None"],
+      "ingredientLines": [
+        "1 slice whole grain bread",
+        "1/2 avocado, mashed",
+        "Salt and pepper to taste"
+      ],
+      "ingredients": [
+        {
+          "text": "whole grain bread",
+          "quantity": 1,
+          "measure": "slice",
+          "food": "bread",
+          "weight": 28,
+          "foodId": "food_br2"
+        },
+        {
+          "text": "avocado",
+          "quantity": 0.5,
+          "measure": "avocado",
+          "food": "avocado",
+          "weight": 68,
+          "foodId": "food_av1"
+        },
+        {
+          "text": "salt and pepper",
+          "quantity": 1,
+          "measure": "pinch",
+          "food": "salt and pepper",
+          "weight": 2,
+          "foodId": "food_sp1"
+        }
+      ],
+      "calories": 250,
+      "glycemicIndex": 15,
+      "inflammatoryIndex": 1,
+      "totalCO2Emissions": 3,
+      "co2EmissionsClass": "A+",
+      "totalWeight": 98,
+      "cuisineType": ["American"],
+      "mealType": ["Breakfast"]
+    }
+  ]
+}
