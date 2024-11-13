@@ -26,7 +26,8 @@ public class SearchEngineInteractor implements SearchEngineInputBoundary {
         else {
             final List<Recipe> recipes = userDataAccessObject.getRecipeList(keyword);
             userDataAccessObject.setCurrentKeyword(keyword);
-            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes, true);
+            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes,
+                    true, keyword);
             searchEnginePresenter.prepareSuccessView(searchEngineOutputData);
         }
     }
