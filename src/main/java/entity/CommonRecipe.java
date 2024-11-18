@@ -6,13 +6,13 @@ public class CommonRecipe implements Recipe {
     private String recipeName;
     private List<Ingredient> ingredients;
     private String instructions;
-    private String category;
+    private User user;
 
-    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, String category) {
+    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, User user) {
         this.recipeName = recipeName;
         this.ingredients = ingredients;
         this.instructions = instruction;
-        this.category = category;
+        this.user = user;
     }
 
     @Override
@@ -21,13 +21,16 @@ public class CommonRecipe implements Recipe {
     }
 
     @Override
-    public String getIngredients() {
-        return this.ingredients.toString();
+    public List<Ingredient> getIngredients() {
+        return this.ingredients;
     }
 
     public String getInstructions() {
         return this.instructions;
     }
 
-    public String getCategory() {return this.category;}
+    @Override
+    public User getUser() {
+        return this.user;
+    }
 }

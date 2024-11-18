@@ -1,9 +1,14 @@
 package entity;
 
+import java.util.List;
+
 public interface Recipe {
 
     String getName();
 
-    String getIngredients();
+    List<Ingredient> getIngredients();
 
+    String getInstructions();
+
+    User getUser();
 }
