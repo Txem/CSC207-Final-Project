@@ -11,7 +11,6 @@ import com.google.gson.JsonParser;
 
 /**
  * Searching recipe using Edamam API.
- *
  */
 public class EdamamApi {
     private static final String APP_ID = "d50864f2";

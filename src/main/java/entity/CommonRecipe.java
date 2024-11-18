@@ -30,11 +30,13 @@ public class CommonRecipe implements Recipe {
         return this.instructions;
     }
 
-    public List<String> getTags() {return tags; }
+    public List<String> getTags() {
+        return tags;
+    }
 
     @Override
     public String toString() {
-        return "Recipe: " + recipeName + "\nIngredients: " + ingredients + "\nInstructions: " + instructions +
-                "\nTags: " + tags;
+        return "Recipe: " + recipeName + "\nIngredients: " + ingredients + "\nInstructions: " + instructions
+                + "\nTags: " + tags;
     }
 }

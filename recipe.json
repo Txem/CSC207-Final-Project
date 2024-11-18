@@ -60,6 +60,7 @@
     },
     {
       "user": ["user3"],
+      "tag": "my favorite",
       "uri": "http://example.com/recipe2",
       "label": "Vegetable Stir Fry",
       "image": "http://example.com/image2.jpg",
@@ -117,6 +118,7 @@
     },
     {
       "user": ["user4", "user5"],
+      "tag": "my second favorite",
       "uri": "http://example.com/recipe3",
       "label": "Avocado Toast",
       "image": "http://example.com/image3.jpg",
