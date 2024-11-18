@@ -7,7 +7,7 @@ import entity.Recipe;
 /**
  * The Search Interactor.
  */
-public class SearchEngineInteractor implements SearchEngineInputBoudary {
+public class SearchEngineInteractor implements SearchEngineInputBoundary {
     private final SearchEngineUserDataAccessInterface userDataAccessObject;
     private final SearchEngineOutputBoundary searchEnginePresenter;
 
@@ -26,7 +26,8 @@ public class SearchEngineInteractor implements SearchEngineInputBoudary {
         else {
             final List<Recipe> recipes = userDataAccessObject.getRecipeList(keyword);
             userDataAccessObject.setCurrentKeyword(keyword);
-            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes, true);
+            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes,
+                    true, keyword);
             searchEnginePresenter.prepareSuccessView(searchEngineOutputData);
         }
     }

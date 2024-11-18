@@ -3,7 +3,7 @@ package use_case.search;
 /**
  *  Input boundary for user to type in.
  */
-public interface SearchEngineInputBoudary {
+public interface SearchEngineInputBoundary {
     /**
      * Executes the search use case.
      * @param  searchEngineInputData the input data

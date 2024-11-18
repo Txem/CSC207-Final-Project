@@ -10,10 +10,12 @@ import entity.Recipe;
 public class SearchEngineOutputData {
     private final List<Recipe> recipes;
     private final Boolean responseSuccess;
+    private final String keyword;
 
-    public SearchEngineOutputData(List<Recipe> recipes, Boolean responseSuccess) {
+    public SearchEngineOutputData(List<Recipe> recipes, Boolean responseSuccess, String keyword) {
         this.recipes = recipes;
         this.responseSuccess = responseSuccess;
+        this.keyword = keyword;
     }
 
     public List<Recipe> getRecipes() {
@@ -22,5 +24,9 @@ public class SearchEngineOutputData {
 
     public Boolean getResponseSuccess() {
         return responseSuccess;
+    }
+
+    public String getKeyword() {
+        return keyword;
     }
 }
