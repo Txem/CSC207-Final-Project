@@ -10,5 +10,5 @@ public interface Recipe {
 
     String getInstructions();
 
-    User getUser();
+    String getUserName();
 }

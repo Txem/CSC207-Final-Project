@@ -6,13 +6,13 @@ public class CommonRecipe implements Recipe {
     private String recipeName;
     private List<Ingredient> ingredients;
     private String instructions;
-    private User user;
+    private String username;
 
-    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, User user) {
+    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, String username) {
         this.recipeName = recipeName;
         this.ingredients = ingredients;
         this.instructions = instruction;
-        this.user = user;
+        this.username = username;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CommonRecipe implements Recipe {
     }
 
     @Override
-    public User getUser() {
-        return this.user;
+    public String getUserName() {
+        return this.username;
     }
 }
