@@ -4,22 +4,22 @@ import use_case.AddRecipe.RecipeOutputBoundary;
 import use_case.AddRecipe.RecipeOutputData;
 
 public class AddRecipePresenter implements RecipeOutputBoundary {
-    private final AddRecipeState state;
+    private final AddRecipeViewModel addRecipeViewModel;
 
-    public AddRecipePresenter(AddRecipeState state) {
-        this.state = state;
+    public AddRecipePresenter(AddRecipeViewModel addRecipeViewModel) {
+        this.addRecipeViewModel = addRecipeViewModel;
     }
 
     @Override
     public void presentSuccess(RecipeOutputData outputData) {
-        state.setMessage(outputData.getMessage());
-        state.setSuccess(true);
+        addRecipeViewModel.setMessage(outputData.getMessage());
+        addRecipeViewModel.setSuccess(true);
     }
 
     @Override
     public void presentError(String errorMessage) {
-        state.setMessage(errorMessage);
-        state.setSuccess(false);
+        addRecipeViewModel.setMessage(errorMessage);
+        addRecipeViewModel.setSuccess(false);
     }
 }
 

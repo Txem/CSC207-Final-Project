@@ -1,29 +1,30 @@
 package interface_adapter.add_recipe;
 
-import entity.Ingredient;
+import interface_adapter.ViewModel;
 
-import java.util.List;
-
-public class AddRecipeViewModel {
-    private final AddRecipeController controller;
-    private final AddRecipeState state;
-
-    public AddRecipeViewModel(AddRecipeController controller, AddRecipeState state) {
-        this.controller = controller;
-        this.state = state;
+public class AddRecipeViewModel extends ViewModel<AddRecipeState> {
+    public AddRecipeViewModel() {
+        super("add_recipe");
+        this.setState(new AddRecipeState());
     }
 
-    public AddRecipeState getState() {
-        return state;
+    public void setMessage(String message) {
+        AddRecipeState state = this.getState();
+        state.setMessage(message);
+        this.firePropertyChanged("message");
     }
 
-    public void addRecipe(String name, List<Ingredient> ingredients, String instructions, String username, String tag) {
-        try {
-            controller.addRecipe(name, ingredients, instructions, username, tag);
-        } catch (IllegalArgumentException e) {
-            state.setMessage(e.getMessage());
-            state.setSuccess(false);
-        }
+    public void setSuccess(boolean success) {
+        AddRecipeState state = this.getState();
+        state.setSuccess(success);
+        this.firePropertyChanged("success");
+    }
+
+    public String getMessage() {
+        return this.getState().getMessage();
+    }
+
+    public boolean isSuccess() {
+        return this.getState().isSuccess();
     }
 }
-

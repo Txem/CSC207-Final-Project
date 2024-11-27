@@ -14,7 +14,7 @@ public class AddRecipeController {
 
     public void addRecipe(String name, List<Ingredient> ingredients, String instructions, String username, String tag) {
         if (name == null || name.isEmpty() || ingredients == null || ingredients.isEmpty() ||
-                instructions == null || instructions.isEmpty() ) {
+                instructions == null || instructions.isEmpty()) {
             throw new IllegalArgumentException("Invalid recipe input");
         }
         RecipeInputData inputData = new RecipeInputData(name, ingredients, instructions, username, tag);
