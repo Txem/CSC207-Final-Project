@@ -1,88 +1,57 @@
 package data_access;
 
-import entity.CommonRecipe;
-import entity.Ingredient;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Recipe;
 import use_case.AddRecipe.RecipeDataAccessInterface;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FileRecipeDataAccessObject implements RecipeDataAccessInterface {
-    private final File csvFile;
+    private static final String DEFAULT_JSON_FILE = "localRecipe.json";
+    private final File jsonFile;
     private final Map<String, List<Recipe>> userRecipes = new HashMap<>();
 
-    public FileRecipeDataAccessObject(String csvFilePath) throws IOException {
-        this.csvFile = new File(csvFilePath);
-
-        if (csvFile.exists() && csvFile.length() > 0) {
+    public FileRecipeDataAccessObject() throws IOException {
+        this.jsonFile = new File(DEFAULT_JSON_FILE);
+        if (jsonFile.exists() && jsonFile.length() > 0) {
             loadData();
         } else {
             save();
         }
     }
 
+
     private void loadData() throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(csvFile))) {
-            String header = reader.readLine();
-            if (header == null || !header.equals("username,recipeName,instructions,ingredients")) {
-                throw new RuntimeException("Invalid CSV header.");
-            }
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] columns = line.split(",", -1);
-                String  username = columns[0];
-                String recipeName = columns[1];
-                String instructions = columns[2];
-                String ingredientsData = columns[3];
-
-                List<Ingredient> ingredients = new ArrayList<>();
-                if (!ingredientsData.isEmpty()) {
-                    String[] ingredientPairs = ingredientsData.split("\\|");
-                    for (String pair : ingredientPairs) {
-                        String[] parts = pair.split(":");
-                        ingredients.add(new Ingredient(parts[0], parts[1]));
-                    }
-                }
-
-                Recipe recipe = new CommonRecipe(recipeName, ingredients, instructions, username);
-                userRecipes.computeIfAbsent(username, k -> new ArrayList<>()).add(recipe);
-            }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map<String, List<Recipe>> loadedData = objectMapper.readValue(jsonFile, new TypeReference<Map<String, List<Recipe>>>() {});
+            userRecipes.putAll(loadedData);
+        } catch (Exception e) {
+            throw new IOException("Failed to load data from JSON file.", e);
         }
     }
 
-    @SuppressWarnings("checkstyle:FinalLocalVariable")
     private void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
-            writer.write("username,recipeName,instructions,ingredients");
-            writer.newLine();
-
-            for (Map.Entry<String, List<Recipe>> entry : userRecipes.entrySet()) {
-                String username = entry.getKey();
-                for (Recipe recipe : entry.getValue()) {
-                    StringBuilder ingredientsBuilder = new StringBuilder();
-                    for (Ingredient ingredient : recipe.getIngredients()) {
-                        if (ingredientsBuilder.length() > 0) {
-                            ingredientsBuilder.append("|");
-                        }
-                        ingredientsBuilder.append(ingredient.getIngredientName())
-                                .append(":")
-                                .append(ingredient.getQuantity());
-                    }
-                    writer.write(String.join(",", username, recipe.getName(), recipe.getInstructions(), ingredientsBuilder.toString()));
-                    writer.newLine();
-                }
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException("Error saving data to CSV file.", ex);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, userRecipes);
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving data to JSON file.", e);
         }
     }
 
     @Override
-    public void saveRecipeForUser(String username, Recipe recipe) {
+    public void saveRecipeForUser(Recipe recipe) {
+        String username = recipe.getUserName();
         userRecipes.computeIfAbsent(username, k -> new ArrayList<>()).add(recipe);
         save();
     }
 }
+
 

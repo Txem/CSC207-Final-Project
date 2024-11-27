@@ -13,9 +13,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.search.SearchEngineUserDataAccessInterface;
 
+
 /**
  * Search the api on the internet.
  */
+
 public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInterface {
 
     private static final int SUCCESS_CODE = 200;
@@ -97,3 +99,4 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
 
     }
 }
+

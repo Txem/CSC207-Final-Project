@@ -11,4 +11,6 @@ public interface Recipe {
     String getInstructions();
 
     String getUserName();
+
+    String getTags();
 }

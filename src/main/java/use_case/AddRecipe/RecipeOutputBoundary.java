@@ -1,5 +1,6 @@
 package use_case.AddRecipe;
 
 public interface RecipeOutputBoundary {
-    void execute(RecipeOutputData recipeOutputData);
+    void presentSuccess(RecipeOutputData outputData);
+    void presentError(String errorMessage);
 }

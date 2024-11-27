@@ -2,19 +2,20 @@ package use_case.AddRecipe;
 
 import java.util.List;
 import entity.Ingredient;
-import entity.User;
 
 public class RecipeInputData {
     private String name;
     private List<Ingredient> ingredients;
     private String instructions;
-    private User user;
+    private String username;
+    private String tags;
 
-    public RecipeInputData(String name, List<Ingredient> ingredients, String instructions, User user) {
+    public RecipeInputData(String name, List<Ingredient> ingredients, String instructions, String username, String tags) {
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
-        this.user = user;
+        this.username = username;
+        this.tags = tags;
     }
 
     public String getName() {
@@ -29,7 +30,11 @@ public class RecipeInputData {
         return instructions;
     }
 
-    public User getUser() {
-        return user;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getTags() {
+        return this.tags;
     }
 }

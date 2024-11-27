@@ -11,10 +11,12 @@ import entity.CommonRecipe;
 import entity.Ingredient;
 import use_case.present_by_tag.PresentByTagDataAccessInterface;
 
+
 /**
  * This class reads the JSON file and returns a list of CommonRecipe objects.
  * Each CommonRecipe object contains the recipe name, ingredients, instruction, and tags.
  */
+
 public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
     private final String filePath;
     private final ObjectMapper objectMapper;
@@ -24,13 +26,15 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         this.objectMapper = new ObjectMapper();
     }
 
-    /**
+
+/**
      * This method reads the JSON file and returns a list of CommonRecipe objects.
      * Each CommonRecipe object contains the recipe name, ingredients, instruction, and tags.
      *
      * @return List<CommonRecipe> a list of CommonRecipe objects.
      * @throws IOException
      */
+
     public List<CommonRecipe> getAllRecipes() throws IOException {
         final List<CommonRecipe> commonRecipes = new ArrayList<>();
         final var jsonNode = objectMapper.readTree(new File(filePath));
@@ -62,12 +66,14 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         return commonRecipes;
     }
 
-    /**
+
+/**
      * Checks if the given tag exists.
      *
      * @param tag the tag to look for
      * @return true if a tag exists; false otherwise
      */
+
 
     @Override
     public boolean exist(String tag) throws IOException {
@@ -96,4 +102,5 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         }
     }
 }
+
 

@@ -18,10 +18,24 @@ public class RecipeInteractor implements use_case.recipe.RecipeInputBoundary {
 
     @Override
     public void execute(RecipeInputData inputData) {
-        Recipe recipe = new CommonRecipe(inputData.getName(), inputData.getIngredients(), inputData.getInstructions(), inputData.getUser());
-        recipeDataAccess.save(, recipe);
-        RecipeOutputData outputData = new RecipeOutputData("Recipe added sucessfully", true);
-        addRecipePresenter.execute(outputData);
+        try {
+            Recipe recipe = new CommonRecipe(
+                    inputData.getName(),
+                    inputData.getIngredients(),
+                    inputData.getInstructions(),
+                    inputData.getUsername(),
+                    inputData.getTags()
+            );
+
+            recipeDataAccess.saveRecipeForUser(recipe);
+
+            RecipeOutputData outputData = new RecipeOutputData("Recipe added successfully", true);
+            addRecipePresenter.presentSuccess(outputData);
+        } catch (Exception e) {
+            RecipeOutputData outputData = new RecipeOutputData("Failed to add recipe: " + e.getMessage(), false);
+            addRecipePresenter.presentError(outputData.getMessage());
+        }
     }
 }
+
 

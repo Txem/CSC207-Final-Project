@@ -7,12 +7,14 @@ public class CommonRecipe implements Recipe {
     private List<Ingredient> ingredients;
     private String instructions;
     private String username;
+    private String tag;
 
-    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, String username) {
+    public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, String username, String tag) {
         this.recipeName = recipeName;
         this.ingredients = ingredients;
         this.instructions = instruction;
         this.username = username;
+        this.tag = tag;
     }
 
     @Override
@@ -29,8 +31,13 @@ public class CommonRecipe implements Recipe {
         return this.instructions;
     }
 
+
     @Override
     public String getUserName() {
         return this.username;
+    }
+
+    public String getTags() {
+        return this.tag;
     }
 }

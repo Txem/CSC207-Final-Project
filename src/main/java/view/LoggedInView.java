@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.add_recipe.AddRecipeController;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -28,6 +29,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JLabel passwordErrorField = new JLabel();
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
+    private AddRecipeController addRecipeController;
 
     private final JLabel username;
 
@@ -36,6 +38,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JTextField passwordInputField = new JTextField(15);
     private final JButton changePassword;
     private final JButton searchEngine;
+    private final JButton addRecipe;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
@@ -54,6 +57,10 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         final JPanel buttons = new JPanel();
         logOut = new JButton("Log Out");
         buttons.add(logOut);
+
+        addRecipe = new JButton("Add Recipe");
+        buttons.add(addRecipe);
+
         searchEngine = new JButton("explore");
         buttons.add(searchEngine);
 
@@ -120,6 +127,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        addRecipe.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(addRecipe)) {
+                        AddRecipeView addRecipeView = new AddRecipeView(addRecipeController);
+                        addRecipeView.setVisible(true);
+                    }
+                }
+        );
+
         this.add(title);
         this.add(usernameInfo);
         this.add(username);
@@ -152,5 +168,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setLogoutController(LogoutController logoutController) {
         this.logoutController = logoutController;
+    }
+
+    public void setAddRecipeController(AddRecipeController addRecipeController) {
+        this.addRecipeController = addRecipeController;
     }
 }
