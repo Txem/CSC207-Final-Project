@@ -1,17 +1,23 @@
 package use_case.favorite;
 
-public class FavoriteInteractor {
-    private final FavoriteUserDataAccessInterface userDataAccessInterface;
-    private final FavoriteOutputBoundary favoritePresenter;
+import data_access.SearchById;
+import entity.CommonRecipe;
 
-    public FavoriteInteractor(FavoriteUserDataAccessInterface userDataAccessInterface,
-                              FavoriteOutputBoundary favoriteOutputBoundary) {
+/**
+ * The favorite Interactor.
+ */
+public class FavoriteInteractor implements FavoriteInputBoundary {
+
+    private final FavoriteUserDataAccessInterface userDataAccessInterface;
+
+    public FavoriteInteractor(FavoriteUserDataAccessInterface userDataAccessInterface) {
         this.userDataAccessInterface = userDataAccessInterface;
-        this.favoritePresenter = favoriteOutputBoundary;
     }
 
     @Override
-    public void execute(FavoriteInputData) {
-
+    public void execute(FavoriteInputData favoriteInputData) {
+        final String id = favoriteInputData.getId();
+        final String username = favoriteInputData.getUsername();
+        userDataAccessInterface.fetchAndWriteRecipeById(id, username);
     }
 }

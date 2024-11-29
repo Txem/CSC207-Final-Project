@@ -9,6 +9,7 @@ import javax.swing.WindowConstants;
 
 import data_access.FileRecipeDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
+import data_access.SearchById;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -18,6 +19,7 @@ import interface_adapter.add_recipe.AddRecipeState;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.favorite.FavoriteController;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -30,6 +32,9 @@ import use_case.AddRecipe.RecipeDataAccessInterface;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
+import use_case.favorite.FavoriteInputBoundary;
+import use_case.favorite.FavoriteInputData;
+import use_case.favorite.FavoriteInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -65,6 +70,8 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final SearchById recipeDataAccessObject = new SearchById();
+
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -172,7 +179,16 @@ public class AppBuilder {
         loggedInView.setLogoutController(logoutController);
         return this;
     }
+    /**
+     * Adds the favorite Use Case to the application.
+     */
+    public AppBuilder addFavoriteUseCase() {
+        final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(recipeDataAccessObject);
 
+        final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
+
+        return this;
+    }
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application

@@ -40,4 +40,5 @@ public class CommonRecipe implements Recipe {
     public String getTags() {
         return this.tag;
     }
+
 }

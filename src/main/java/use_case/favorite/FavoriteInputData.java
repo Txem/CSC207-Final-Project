@@ -5,13 +5,19 @@ package use_case.favorite;
  */
 public class FavoriteInputData {
 
-    private final String url;
+    private final String id;
+    private final String username;
 
-    public FavoriteInputData(String url) {
-        this.url = url;
+    public FavoriteInputData(String id, String username) {
+        this.id = id;
+        this.username = username;
     }
 
-    public String getUrl() {
-        return url;
+    public String getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
