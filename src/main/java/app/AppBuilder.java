@@ -187,6 +187,7 @@ public class AppBuilder {
         loggedInView.setLogoutController(logoutController);
         return this;
     }
+
     /**
      * Adds the favorite Use Case to the application.
      */
@@ -198,25 +199,6 @@ public class AppBuilder {
 
         return this;
     }
-
-//    /**
-//     * Adds searchengine use case.
-//     * @return the builder
-//     */
-//    public AppBuilder addSearchEngineUseCase() {
-//        searchEngineViewModel = new SearchEngineViewModel();
-//        searchEngineView = new SearchEngineView(searchEngineViewModel);
-//        final SearchEngineOutputBoundary searchEngineOutputBoundary = new SearchEnginePresenter(viewManagerModel,
-//                searchEngineViewModel);
-//
-//        final SearchEngineInputBoundary searchEngineInteractor = new SearchEngineInteractor(
-//                apiExploreDataAccessObject, searchEngineOutputBoundary);
-//
-//        final SearchEngineController searchEngineController = new SearchEngineController(searchEngineInteractor);
-//        searchEngineView.setSearchController(searchEngineController);
-////        loggedInView.setSearchEngineController(searchEngineController);
-//        return this;
-//    }
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
