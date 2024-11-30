@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.ApiExploreDataAccessObject;
 import data_access.FileRecipeDataAccessObject;
 import data_access.InMemoryUserDataAccessObject;
 import data_access.SearchById;
@@ -25,6 +26,10 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineState;
+import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -41,13 +46,13 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.search.SearchEngineInputBoundary;
+import use_case.search.SearchEngineInteractor;
+import use_case.search.SearchEngineOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -70,6 +75,7 @@ public class AppBuilder {
 
     // thought question: is the hard dependency below a problem?
     private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
     private final SearchById recipeDataAccessObject = new SearchById();
 
 
@@ -79,6 +85,8 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private SearchEngineViewModel searchEngineViewModel;
+    private SearchEngineView searchEngineView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -190,6 +198,26 @@ public class AppBuilder {
 
         return this;
     }
+
+//    /**
+//     * Adds searchengine use case.
+//     * @return the builder
+//     */
+//    public AppBuilder addSearchEngineUseCase() {
+//        searchEngineViewModel = new SearchEngineViewModel();
+//        searchEngineView = new SearchEngineView(searchEngineViewModel);
+//        final SearchEngineOutputBoundary searchEngineOutputBoundary = new SearchEnginePresenter(viewManagerModel,
+//                searchEngineViewModel);
+//
+//        final SearchEngineInputBoundary searchEngineInteractor = new SearchEngineInteractor(
+//                apiExploreDataAccessObject, searchEngineOutputBoundary);
+//
+//        final SearchEngineController searchEngineController = new SearchEngineController(searchEngineInteractor);
+//        searchEngineView.setSearchController(searchEngineController);
+////        loggedInView.setSearchEngineController(searchEngineController);
+//        return this;
+//    }
+
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application

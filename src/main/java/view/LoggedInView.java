@@ -13,12 +13,18 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import data_access.ApiExploreDataAccessObject;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.add_recipe.AddRecipeController;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.favorite.FavoriteController;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineViewModel;
+import use_case.search.SearchEngineInteractor;
 
 /**
  * The View for when the user is logged into the program.
@@ -31,6 +37,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
     private AddRecipeController addRecipeController;
+    private SearchEngineViewModel searchEngineViewModel;
+    private SearchEngineController searchEngineController;
     private FavoriteController favoriteController;
 
     private final JLabel username;
@@ -128,7 +136,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         searchEngine.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(searchEngine)) {
-                        // TODO
+                        searchEngineViewModel = new SearchEngineViewModel();
+//                        final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
+//                        final SearchEnginePresenter searchEnginePresenter = new SearchEnginePresenter(new ViewManagerModel(), searchEngineViewModel);
+//                        final SearchEngineInteractor searchEngineInteractor = new SearchEngineInteractor(apiExploreDataAccessObject, searchEnginePresenter);
+//                        searchEngineController = new SearchEngineController(searchEngineInteractor);
+                        final SearchEngineView searchEngineView = new SearchEngineView(searchEngineViewModel);
+                        searchEngineView.setVisible(true);
                     }
                 }
         );
@@ -189,5 +203,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     }
     public void setFavoriteController(FavoriteController favoritecontroller) {
         this.favoriteController = favoritecontroller;
+    }
+
+    public void setSearchEngineController(SearchEngineController searchEngineController) {
+        this.searchEngineController = searchEngineController;
     }
 }

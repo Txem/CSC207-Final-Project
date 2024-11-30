@@ -1,153 +1,170 @@
-//package view;
-//
-//import interface_adapter.login.LoginController;
-//import interface_adapter.login.LoginState;
-//import interface_adapter.login.LoginViewModel;
-//
-//import javax.swing.*;
-//import javax.swing.event.DocumentEvent;
-//import javax.swing.event.DocumentListener;
-//import java.awt.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.beans.PropertyChangeEvent;
-//
-///**
-// * The View for when the user is searching.
-// */
-//public class SearchEngineView extends JPanel {
-//
-//    private final String viewName = "search";
-//    private final SearchEngineViewModel searchEngineViewModel;
-//
-//    private final JTextField usernameInputField = new JTextField(15);
-//    private final JLabel usernameErrorField = new JLabel();
-//
-//    private final JPasswordField passwordInputField = new JPasswordField(15);
-//    private final JLabel passwordErrorField = new JLabel();
-//
-//    private final JButton logIn;
-//    private final JButton cancel;
-//    private LoginController loginController;
-//
-//    public LoginView(LoginViewModel loginViewModel) {
-//
-//        this.loginViewModel = loginViewModel;
-//        this.loginViewModel.addPropertyChangeListener(this);
-//
-//        final JLabel title = new JLabel("Login Screen");
-//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-//
-//        final LabelTextPanel usernameInfo = new LabelTextPanel(
-//                new JLabel("Username"), usernameInputField);
-//        final LabelTextPanel passwordInfo = new LabelTextPanel(
-//                new JLabel("Password"), passwordInputField);
-//
-//        final JPanel buttons = new JPanel();
-//        logIn = new JButton("log in");
-//        buttons.add(logIn);
-//        cancel = new JButton("cancel");
-//        buttons.add(cancel);
-//
-//        logIn.addActionListener(
-//                new ActionListener() {
-//                    public void actionPerformed(ActionEvent evt) {
-//                        if (evt.getSource().equals(logIn)) {
-//                            final LoginState currentState = loginViewModel.getState();
-//
-//                            loginController.execute(
-//                                    currentState.getUsername(),
-//                                    currentState.getPassword()
-//                            );
-//                        }
-//                    }
-//                }
-//        );
-//
-//        cancel.addActionListener(this);
-//
-//        usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
-//
-//            private void documentListenerHelper() {
-//                final LoginState currentState = loginViewModel.getState();
-//                currentState.setUsername(usernameInputField.getText());
-//                loginViewModel.setState(currentState);
-//            }
-//
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//        });
-//
-//        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-//
-//        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
-//
-//            private void documentListenerHelper() {
-//                final LoginState currentState = loginViewModel.getState();
-//                currentState.setPassword(new String(passwordInputField.getPassword()));
-//                loginViewModel.setState(currentState);
-//            }
-//
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                documentListenerHelper();
-//            }
-//        });
-//
-//        this.add(title);
-//        this.add(usernameInfo);
-//        this.add(usernameErrorField);
-//        this.add(passwordInfo);
-//        this.add(buttons);
-//    }
-//
-//    /**
-//     * React to a button click that results in evt.
-//     * @param evt the ActionEvent to react to
-//     */
-//    public void actionPerformed(ActionEvent evt) {
-//        System.out.println("Click " + evt.getActionCommand());
-//    }
-//
-//    @Override
-//    public void propertyChange(PropertyChangeEvent evt) {
-//        final LoginState state = (LoginState) evt.getNewValue();
-//        setFields(state);
-//        usernameErrorField.setText(state.getLoginError());
-//    }
-//
-//    private void setFields(LoginState state) {
-//        usernameInputField.setText(state.getUsername());
-//        passwordInputField.setText(state.getPassword());
-//    }
-//
-//    public String getViewName() {
-//        return viewName;
-//    }
-//
-//    public void setLoginController(LoginController loginController) {
-//        this.loginController = loginController;
-//    }
-//}
+package view;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import data_access.ApiExploreDataAccessObject;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineState;
+import interface_adapter.searchengine.SearchEngineViewModel;
+import entity.CommonRecipe;
+import use_case.search.SearchEngineInteractor;
+
+/**
+ * The View for the Search Engine Use Case.
+ */
+public class SearchEngineView extends JFrame implements ActionListener, PropertyChangeListener {
+    private final String viewName = "search engine";
+
+    private final SearchEngineViewModel searchViewModel;
+    private final JTextField searchInputField = new JTextField(20);
+    private final JButton searchButton;
+    private final JPanel resultsPanel;
+    private SearchEngineController searchController;
+
+    public SearchEngineView(SearchEngineViewModel searchViewModel) {
+        this.searchViewModel = searchViewModel;
+        final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
+        final SearchEnginePresenter searchEnginePresenter = new SearchEnginePresenter(new ViewManagerModel(), searchViewModel);
+        final SearchEngineInteractor searchEngineInteractor = new SearchEngineInteractor(apiExploreDataAccessObject, searchEnginePresenter);
+
+        this.searchController = new SearchEngineController(searchEngineInteractor);
+        searchViewModel.addPropertyChangeListener(this);
+
+        setTitle("Search Engine");
+        setSize(600, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        JPanel searchBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        searchButton = new JButton("Search");
+        searchBar.add(new JLabel("Search:"));
+        searchBar.add(searchInputField);
+        searchBar.add(searchButton);
+
+        add(searchBar, BorderLayout.NORTH);
+
+        resultsPanel = new JPanel();
+        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(resultsPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Results"));
+        add(scrollPane, BorderLayout.CENTER);
+
+        searchButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        System.out.println("Search button pressed");
+                        final SearchEngineState currentState = searchViewModel.getState();
+                        searchController.execute(searchInputField.getText());
+                    }
+                }
+        );
+    }
+
+    private void addSearchInputListener() {
+        searchInputField.getDocument().addDocumentListener(new DocumentListener() {
+            private void documentListenerHelper() {
+                final SearchEngineState currentState = searchViewModel.getState();
+                currentState.setKeyword(searchInputField.getText());
+                searchViewModel.setState(currentState);
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                documentListenerHelper();
+            }
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(this, "Action not implemented yet.");
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println(evt);
+        System.out.println("exe");
+        updateResults(searchViewModel.getState().getRecipes());
+        System.out.println("exe1");
+        if (searchViewModel.getState().getSearchError() != null) {
+            JOptionPane.showMessageDialog(this, searchViewModel.getState().getSearchError());
+        }
+    }
+
+    private void updateResults(List<CommonRecipe> recipes) {
+        System.out.println("updating");
+
+        resultsPanel.removeAll();
+        if (recipes == null || recipes.isEmpty()) {
+            resultsPanel.add(new JLabel("No results found."));
+        } else {
+            for (CommonRecipe recipe : recipes) {
+                System.out.println("this is a recipe");
+                resultsPanel.add(createRecipeCard(recipe));
+            }
+        }
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
+    }
+
+    private JPanel createRecipeCard(CommonRecipe recipe) {
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        card.setBackground(Color.WHITE);
+
+        JLabel nameLabel = new JLabel("Name: " + recipe.getName());
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        card.add(nameLabel);
+
+        JLabel ingredientsLabel = new JLabel("Ingredients:");
+        ingredientsLabel.setFont(new Font("Arial", Font.ITALIC, 12));
+        card.add(ingredientsLabel);
+
+        for (var ingredient : recipe.getIngredients()) {
+            JLabel ingredientLabel = new JLabel("- " + ingredient.getIngredientName() + " (" + ingredient.getQuantity() + ")");
+            ingredientLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+            card.add(ingredientLabel);
+        }
+
+        JLabel instructionLabel = new JLabel("Instruction: " + recipe.getInstructions());
+        instructionLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        card.add(instructionLabel);
+
+        return card;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setSearchController(SearchEngineController controller) {
+        this.searchController = controller;
+    }
+}
