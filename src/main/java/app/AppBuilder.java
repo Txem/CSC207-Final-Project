@@ -186,6 +186,7 @@ public class AppBuilder {
         final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(recipeDataAccessObject);
 
         final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
+        loggedInView.setFavoriteController(favoriteController);
 
         return this;
     }

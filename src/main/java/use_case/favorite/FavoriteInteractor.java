@@ -7,7 +7,6 @@ import entity.CommonRecipe;
  * The favorite Interactor.
  */
 public class FavoriteInteractor implements FavoriteInputBoundary {
-
     private final FavoriteUserDataAccessInterface userDataAccessInterface;
 
     public FavoriteInteractor(FavoriteUserDataAccessInterface userDataAccessInterface) {

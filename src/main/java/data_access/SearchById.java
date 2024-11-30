@@ -35,7 +35,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
     public void fetchAndWriteRecipeById(String recipeId, String username) {
         // Build the API URL
         final String apiUrl = String.format("%s%s?type=public&app_id=%s&app_key=%s", BASE_URL, recipeId,
-                APP_ID, getApiToken());
+                APP_ID, "98322a9a5ec5ced4eb6c6afd4c5d52d4");
 
         // Set up HTTP client
         final OkHttpClient client = new OkHttpClient().newBuilder().build();

@@ -17,6 +17,7 @@ import interface_adapter.add_recipe.AddRecipeController;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
+import interface_adapter.favorite.FavoriteController;
 import interface_adapter.logout.LogoutController;
 
 /**
@@ -30,6 +31,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private ChangePasswordController changePasswordController;
     private LogoutController logoutController;
     private AddRecipeController addRecipeController;
+    private FavoriteController favoriteController;
 
     private final JLabel username;
 
@@ -39,6 +41,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JButton changePassword;
     private final JButton searchEngine;
     private final JButton addRecipe;
+    private final JButton favorite;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
@@ -60,6 +63,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         addRecipe = new JButton("Add Recipe");
         buttons.add(addRecipe);
+
+        favorite = new JButton("Favorite");
+        buttons.add(favorite);
 
         searchEngine = new JButton("explore");
         buttons.add(searchEngine);
@@ -136,6 +142,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        favorite.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(favorite)) {
+                        favoriteController.execute("recipe_95e75161a387a319a6f9539ddc02b16d", "user2");
+                    }
+                }
+        );
+
         this.add(title);
         this.add(usernameInfo);
         this.add(username);
@@ -172,5 +186,8 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
     public void setAddRecipeController(AddRecipeController addRecipeController) {
         this.addRecipeController = addRecipeController;
+    }
+    public void setFavoriteController(FavoriteController favoritecontroller) {
+        this.favoriteController = favoritecontroller;
     }
 }
