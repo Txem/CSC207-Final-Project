@@ -14,6 +14,7 @@ import javax.swing.event.DocumentListener;
 import data_access.ApiExploreDataAccessObject;
 import data_access.SearchById;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.change_password.LoggedInState;
 import interface_adapter.favorite.FavoriteController;
 import interface_adapter.searchengine.SearchEngineController;
 import interface_adapter.searchengine.SearchEnginePresenter;
@@ -29,7 +30,7 @@ import use_case.search.SearchEngineInteractor;
  */
 public class SearchEngineView extends JFrame implements ActionListener, PropertyChangeListener {
     private final String viewName = "search engine";
-
+    private final String username;
     private final SearchEngineViewModel searchViewModel;
     private final JTextField searchInputField = new JTextField(20);
     private final JButton searchButton;
@@ -38,8 +39,9 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
     private final SearchById recipeDataAccessObject = new SearchById();
     private Image backgroundImage;
 
-    public SearchEngineView(SearchEngineViewModel searchViewModel) {
+    public SearchEngineView(SearchEngineViewModel searchViewModel, String username) {
         this.searchViewModel = searchViewModel;
+        this.username = username;
         final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
         final SearchEnginePresenter searchEnginePresenter = new SearchEnginePresenter(new ViewManagerModel(), searchViewModel);
         final SearchEngineInteractor searchEngineInteractor = new SearchEngineInteractor(apiExploreDataAccessObject, searchEnginePresenter);
@@ -174,9 +176,8 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
                     String recipeId = recipe.getRecipeId();
                     System.out.println("Downloading recipe: " + recipeId);
                     final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(recipeDataAccessObject);
-
                     final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
-                    favoriteController.execute(recipeId, "user2"); // Replace "user2" with actual username if dynamic
+                    favoriteController.execute(recipeId, username); // Replace "user2" with actual username if dynamic
                 }
         );
         card.add(favoriteButton);

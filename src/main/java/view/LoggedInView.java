@@ -137,11 +137,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(searchEngine)) {
                         searchEngineViewModel = new SearchEngineViewModel();
-//                        final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
-//                        final SearchEnginePresenter searchEnginePresenter = new SearchEnginePresenter(new ViewManagerModel(), searchEngineViewModel);
-//                        final SearchEngineInteractor searchEngineInteractor = new SearchEngineInteractor(apiExploreDataAccessObject, searchEnginePresenter);
-//                        searchEngineController = new SearchEngineController(searchEngineInteractor);
-                        final SearchEngineView searchEngineView = new SearchEngineView(searchEngineViewModel);
+                        final LoggedInState currentState = loggedInViewModel.getState();
+                        final String username = currentState.getUsername();
+                        final SearchEngineView searchEngineView = new SearchEngineView(searchEngineViewModel, username);
                         searchEngineView.setVisible(true);
                     }
                 }
