@@ -77,72 +77,33 @@ public class SearchById implements FavoriteUserDataAccessInterface {
             recipeJson.put("username", username);
             recipeJson.put("tag", "favorite");
 
-            // Read the existing JSON file, or create a new JSON object if the file doesn't exist
-            JSONObject fileContent = new JSONObject();
+            JSONObject fileContent;
             JSONArray recipesArray;
 
             java.io.File file = new java.io.File(OUTPUT_FILE);
-            if (file.exists()) {
-                // Read the file content safely
-                StringBuilder fileData = new StringBuilder();
-                try (BufferedReader bufferedReader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        fileData.append(line);
-                    }
-                }
-                fileContent = new JSONObject(fileData.toString());
-                recipesArray = fileContent.optJSONArray("recipes");
-            } else {
-                recipesArray = new JSONArray(); // Create a new array if the file doesn't exist
-            }
-
-            // If "recipes" doesn't exist, initialize it
-            if (recipesArray == null) {
-                recipesArray = new JSONArray();
-            }
-
-            // Check if the recipe already exists in the array
-            boolean recipeExists = false;
-            for (int i = 0; i < recipesArray.length(); i++) {
-                JSONObject existingRecipe = recipesArray.getJSONObject(i);
-                if (existingRecipe.getString("uri").equals(recipeJson.getString("uri"))) {
-                    // Recipe exists, append the username to the "username" array
-                    JSONArray usernames = existingRecipe.optJSONArray("username");
-                    if (usernames == null) {
-                        // Initialize "username" as a new array if it doesn't exist
-                        usernames = new JSONArray();
-                        existingRecipe.put("username", usernames);
-                    }
-                    if (!usernames.toList().contains(username)) {
-                        usernames.put(username); // Append the new username if not already present
-                    }
-                    recipeExists = true;
-                    break;
+            // Read the file content safely
+            StringBuilder fileData = new StringBuilder();
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    fileData.append(line);
                 }
             }
+            fileContent = new JSONObject(fileData.toString());
+            recipesArray = fileContent.optJSONArray("recipes");
 
-            if (!recipeExists) {
-                // Add username and tag to the recipe
-                JSONArray usernames = new JSONArray();
-                usernames.put(username);
-                recipeJson.put("username", usernames);
-                recipeJson.put("tag", "favorite");
-
-                // Add the new recipe to the array
-                recipesArray.put(recipeJson);
-            }
+            // Add the new recipe to the array, even if it exists
+            recipesArray.put(recipeJson);
 
             // Update the "recipes" key in the JSON object
             fileContent.put("recipes", recipesArray);
 
             // Write the updated JSON back to the file
             try (FileWriter writer = new FileWriter(OUTPUT_FILE)) {
-                writer.write(fileContent.toString(4));
+                writer.write(fileContent.toString(4)); // Pretty print with 4 spaces
                 System.out.println("Recipe added to " + OUTPUT_FILE);
             }
-        }
-        catch (IOException | JSONException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException("Error appending recipe to file", e);
         }
     }

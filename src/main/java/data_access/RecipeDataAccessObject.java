@@ -59,7 +59,7 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
                 ingredients.add(new Ingredient(name, quantity));
             });
 
-            final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, tags);
+            final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, null,null);
             commonRecipes.add(commonRecipe);
         }
 

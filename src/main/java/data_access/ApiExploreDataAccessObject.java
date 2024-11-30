@@ -79,7 +79,7 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
                     }
                     final String instuction = recipesJSONObject.getJSONObject(i).getString("institution");
                     // TODO add tags
-                    final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instuction, null);
+                    final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instuction, null,null);
                     recipes.add(commonRecipe);
                 }
 
