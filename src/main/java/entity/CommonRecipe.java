@@ -8,6 +8,7 @@ public class CommonRecipe implements Recipe {
     private String instructions;
     private String username;
     private String tag;
+    private String recipeId;
 
     public CommonRecipe(String recipeName, List<Ingredient> ingredients, String instruction, String username, String tag) {
         this.recipeName = recipeName;
@@ -15,6 +16,7 @@ public class CommonRecipe implements Recipe {
         this.instructions = instruction;
         this.username = username;
         this.tag = tag;
+        recipeId = null;
     }
 
     @Override
@@ -31,6 +33,13 @@ public class CommonRecipe implements Recipe {
         return this.instructions;
     }
 
+    public String getRecipeId() {
+        return this.recipeId;
+    }
+
+    public void setRecipeId(String recipeId) {
+        this.recipeId = recipeId;
+    }
 
     @Override
     public String getUserName() {

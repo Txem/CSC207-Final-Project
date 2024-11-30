@@ -80,8 +80,6 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
                     final List<Ingredient> ingredients = new ArrayList<Ingredient>();
                     for (int j = 0; j < ingredientsJSONObject.length(); j++) {
                         final String ingredientName = ingredientsJSONObject.getJSONObject(j).getString("food");
-//                        final String quantity = ingredientsJSONObject.getJSONObject(j).getInt("quantity")
-//                                + ingredientsJSONObject.getJSONObject(j).getString("measure");
 
                         final String quantity = ingredientsJSONObject.getJSONObject(j).getString("text");
                         final Ingredient ingredient = new Ingredient(ingredientName, quantity);
@@ -90,7 +88,9 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
                     final JSONObject recipeObject = recipesJSONArray.getJSONObject(i).getJSONObject("recipe");
                     final String instruction = recipeObject.has("institution") ? recipeObject.getString("institution") : "Unknown";
                     final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, null, null);
-                    // TODO add tags
+                    final String uri = recipesJSONArray.getJSONObject(i).getJSONObject("recipe").getString("uri");
+                    final String recipeId = extractId(uri);
+                    commonRecipe.setRecipeId(recipeId);
                     recipes.add(commonRecipe);
                 }
 
@@ -109,6 +109,11 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
     @Override
     public void setCurrentKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String extractId(String uri) {
+        int index = uri.lastIndexOf('#');
+        return index != -1 ? uri.substring(index + 1) : "";
     }
 }
 

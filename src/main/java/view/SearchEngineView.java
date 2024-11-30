@@ -12,12 +12,16 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import data_access.ApiExploreDataAccessObject;
+import data_access.SearchById;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.favorite.FavoriteController;
 import interface_adapter.searchengine.SearchEngineController;
 import interface_adapter.searchengine.SearchEnginePresenter;
 import interface_adapter.searchengine.SearchEngineState;
 import interface_adapter.searchengine.SearchEngineViewModel;
 import entity.CommonRecipe;
+import use_case.favorite.FavoriteInputBoundary;
+import use_case.favorite.FavoriteInteractor;
 import use_case.search.SearchEngineInteractor;
 
 /**
@@ -31,13 +35,15 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
     private final JButton searchButton;
     private final JPanel resultsPanel;
     private SearchEngineController searchController;
+    private final SearchById recipeDataAccessObject = new SearchById();
+    private Image backgroundImage;
 
     public SearchEngineView(SearchEngineViewModel searchViewModel) {
         this.searchViewModel = searchViewModel;
         final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
         final SearchEnginePresenter searchEnginePresenter = new SearchEnginePresenter(new ViewManagerModel(), searchViewModel);
         final SearchEngineInteractor searchEngineInteractor = new SearchEngineInteractor(apiExploreDataAccessObject, searchEnginePresenter);
-
+        backgroundImage = new ImageIcon("img/images.jpg").getImage();
         this.searchController = new SearchEngineController(searchEngineInteractor);
         searchViewModel.addPropertyChangeListener(this);
 
@@ -134,15 +140,17 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.GRAY, 1),
+                BorderFactory.createLineBorder(Color.gray, 1),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)
         ));
-        card.setBackground(Color.WHITE);
+        card.setBackground(Color.white);
 
+        // Recipe name
         JLabel nameLabel = new JLabel("Name: " + recipe.getName());
         nameLabel.setFont(new Font("Arial", Font.BOLD, 14));
         card.add(nameLabel);
 
+        // Ingredients
         JLabel ingredientsLabel = new JLabel("Ingredients:");
         ingredientsLabel.setFont(new Font("Arial", Font.ITALIC, 12));
         card.add(ingredientsLabel);
@@ -153,9 +161,25 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
             card.add(ingredientLabel);
         }
 
+        // Instructions
         JLabel instructionLabel = new JLabel("Instruction: " + recipe.getInstructions());
         instructionLabel.setFont(new Font("Arial", Font.PLAIN, 12));
         card.add(instructionLabel);
+
+        // Button to download recipe
+        JButton favoriteButton = new JButton("Download");
+        favoriteButton.setAlignmentX(Component.RIGHT_ALIGNMENT); // Align button to the right
+        favoriteButton.addActionListener(
+                evt -> {
+                    String recipeId = recipe.getRecipeId();
+                    System.out.println("Downloading recipe: " + recipeId);
+                    final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(recipeDataAccessObject);
+
+                    final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
+                    favoriteController.execute(recipeId, "user2"); // Replace "user2" with actual username if dynamic
+                }
+        );
+        card.add(favoriteButton);
 
         return card;
     }
