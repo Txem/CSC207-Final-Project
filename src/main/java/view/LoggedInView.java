@@ -39,6 +39,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JButton changePassword;
     private final JButton searchEngine;
     private final JButton addRecipe;
+    private final JButton presentByTag;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
@@ -61,11 +62,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         addRecipe = new JButton("Add Recipe");
         buttons.add(addRecipe);
 
+
         searchEngine = new JButton("explore");
         buttons.add(searchEngine);
 
         changePassword = new JButton("Change Password");
         buttons.add(changePassword);
+
+        presentByTag = new JButton("Search Your Tag");
+        buttons.add(presentByTag);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -122,6 +127,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         searchEngine.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(searchEngine)) {
+                        // TODO
+                    }
+                }
+        );
+
+        presentByTag.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(presentByTag)) {
                         // TODO
                     }
                 }

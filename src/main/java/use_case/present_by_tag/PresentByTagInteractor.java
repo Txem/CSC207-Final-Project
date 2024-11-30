@@ -1,9 +1,9 @@
 package use_case.present_by_tag;
 
-import entity.CommonRecipe;
-
 import java.io.IOException;
 import java.util.List;
+
+import entity.CommonRecipe;
 
 /**
  * This class represents the interactor of the present by tag use case.

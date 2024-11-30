@@ -1,5 +1,7 @@
 package interface_adapter;
 
+import interface_adapter.present_by_tag.PresentByTagState;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -60,5 +62,8 @@ public class ViewModel<T> {
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.support.addPropertyChangeListener(listener);
+    }
+
+    public void updateState(PresentByTagState state) {
     }
 }

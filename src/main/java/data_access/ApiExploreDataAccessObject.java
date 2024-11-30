@@ -78,8 +78,9 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
                         ingredients.add(ingredient);
                     }
                     final String instuction = recipesJSONObject.getJSONObject(i).getString("institution");
+                    final String username = recipesJSONObject.getJSONObject(i).getString(USERNAME);
                     // TODO add tags
-                    final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instuction, null);
+                    final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instuction, username, null);
                     recipes.add(commonRecipe);
                 }
 

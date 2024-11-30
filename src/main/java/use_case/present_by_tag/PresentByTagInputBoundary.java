@@ -10,6 +10,7 @@ public interface PresentByTagInputBoundary {
     /**
      * Executes the login use case.
      * @param PresentByTagInputData the input data
+     * @throws IOException if an I/O error occurs
      */
     void execute(PresentByTagInputData PresentByTagInputData) throws IOException;
 }
