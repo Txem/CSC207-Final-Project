@@ -51,7 +51,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JButton changePassword;
     private final JButton searchEngine;
     private final JButton addRecipe;
-    private final JButton favorite;
     private final JButton presentByTag;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
@@ -74,9 +73,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         addRecipe = new JButton("Add Recipe");
         buttons.add(addRecipe);
-
-        favorite = new JButton("Favorite");
-        buttons.add(favorite);
 
         searchEngine = new JButton("explore");
         buttons.add(searchEngine);
@@ -156,14 +152,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     if (evt.getSource().equals(addRecipe)) {
                         AddRecipeView addRecipeView = new AddRecipeView(addRecipeController);
                         addRecipeView.setVisible(true);
-                    }
-                }
-        );
-
-        favorite.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(favorite)) {
-                        favoriteController.execute("recipe_95e75161a387a319a6f9539ddc02b16d", "user2");
                     }
                 }
         );
