@@ -7,16 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.ApiExploreDataAccessObject;
-import data_access.FileRecipeDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.SearchById;
+import data_access.*;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.add_recipe.AddRecipeController;
-import interface_adapter.add_recipe.AddRecipePresenter;
-import interface_adapter.add_recipe.AddRecipeState;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -26,19 +20,14 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
-import interface_adapter.searchengine.SearchEngineController;
-import interface_adapter.searchengine.SearchEnginePresenter;
-import interface_adapter.searchengine.SearchEngineState;
 import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import use_case.AddRecipe.RecipeDataAccessInterface;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.favorite.FavoriteInputBoundary;
-import use_case.favorite.FavoriteInputData;
 import use_case.favorite.FavoriteInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -46,9 +35,6 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
-import use_case.search.SearchEngineInputBoundary;
-import use_case.search.SearchEngineInteractor;
-import use_case.search.SearchEngineOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -74,10 +60,8 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
-    private final ApiExploreDataAccessObject apiExploreDataAccessObject = new ApiExploreDataAccessObject();
+    private FileUserDataAccessObject userDataAccessObject = null;
     private final SearchById recipeDataAccessObject = new SearchById();
-
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -90,6 +74,15 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        try {
+            userDataAccessObject = new FileUserDataAccessObject("user.csv", userFactory);
+            System.out.println("FileUserDataAccessObject created successfully!");
+        }
+        catch (IOException e) {
+            // Handle the exception (e.g., log it or show an error message)
+            System.err.println("Error creating FileUserDataAccessObject: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -207,9 +200,7 @@ public class AppBuilder {
     public JFrame build() {
         final JFrame application = new JFrame("MyRecipe");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         application.add(cardPanel);
-
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 

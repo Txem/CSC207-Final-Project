@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -33,12 +33,15 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private SignupController signupController;
 
     private final JButton signUp;
-    private final JButton cancel;
+//    private final JButton cancel;
     private final JButton toLogin;
 
     public SignupView(SignupViewModel signupViewModel) {
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
+
+        final BackgroundPanel backgroundPanel = new BackgroundPanel("img/images.jpg");
+        backgroundPanel.setLayout(new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS));
 
         final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -52,11 +55,35 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
         final JPanel buttons = new JPanel();
         toLogin = new JButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
+        toLogin.setForeground(Color.WHITE); // Text color
+        toLogin.setBackground(new Color(70, 130, 180)); // Default background color
+        toLogin.setOpaque(true);
+        toLogin.setBorderPainted(false);
+        HoverEffect.apply(
+                toLogin,
+                new Color(70, 130, 180),
+                new Color(30, 144, 255),
+                new Color(25, 25, 112)
+        );
         buttons.add(toLogin);
         signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+        signUp.setForeground(Color.WHITE); // Text color
+        signUp.setBackground(new Color(70, 130, 180)); // Default background color
+        signUp.setOpaque(true);
+        signUp.setBorderPainted(false);
+        HoverEffect.apply(
+                signUp,
+                new Color(70, 130, 180),
+                new Color(30, 144, 255),
+                new Color(25, 25, 112)
+        );
         buttons.add(signUp);
-        cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
-        buttons.add(cancel);
+//        cancel = new JButton(SignupViewModel.CANCEL_BUTTON_LABEL);
+//        cancel.setForeground(Color.WHITE); // Text color
+//        toLogin.setBackground(new Color(70, 130, 180)); // Default background color
+//        toLogin.setOpaque(true);
+//        toLogin.setBorderPainted(false);
+//        buttons.add(cancel);
 
         signUp.addActionListener(
                 // This creates an anonymous subclass of ActionListener and instantiates it.
@@ -83,14 +110,13 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        cancel.addActionListener(this);
+//        cancel.addActionListener(this);
 
         addUsernameListener();
         addPasswordListener();
         addRepeatPasswordListener();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
         this.add(title);
         this.add(usernameInfo);
         this.add(passwordInfo);
