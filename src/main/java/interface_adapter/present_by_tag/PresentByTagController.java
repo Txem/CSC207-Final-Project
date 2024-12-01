@@ -28,4 +28,13 @@ public class PresentByTagController {
 
         return presentByTagInteractor.execute(presentByTagInputData);
     }
+
+    /**
+     * This method is responsible for getting all the recipes.
+     * @return A list of all the recipes.
+     * @throws IOException If there is an error in reading or writing files.
+     */
+    public List<CommonRecipe> getAllRecipes() throws IOException {
+        return presentByTagInteractor.getAllRecipes();
+    }
 }

@@ -18,4 +18,6 @@ public interface PresentByTagInputBoundary {
      * @throws IOException if an I/O error occurs
      */
     List<CommonRecipe> execute(PresentByTagInputData PresentByTagInputData) throws IOException;
+
+    List<CommonRecipe> getAllRecipes() throws IOException;
 }
