@@ -16,4 +16,9 @@ public class Ingredient {
     public String getQuantity() {
         return this.quantity;
     }
+
+    @Override
+    public String toString() {
+        return "Ingredient{" + "ingredientName= " + ingredientName + ", quantity= " + quantity + '}';
+    }
 }

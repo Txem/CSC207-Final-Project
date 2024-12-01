@@ -1,5 +1,6 @@
 package interface_adapter.present_by_tag;
 
+import interface_adapter.ViewManagerModel;
 import use_case.present_by_tag.PresentByTagOutputBoundary;
 import use_case.present_by_tag.PresentByTagOutputData;
 
@@ -20,7 +21,9 @@ public class PresentByTagPresenter implements PresentByTagOutputBoundary {
 
     @Override
     public void prepareSuccessView(PresentByTagOutputData response) {
-        // todo
+        final PresentByTagState presentByTagState = presentByTagViewModel.getState();
+        presentByTagState.setTag(response.getTag());
+        presentByTagViewModel.firePropertyChanged();
     }
 
     /**
@@ -30,9 +33,8 @@ public class PresentByTagPresenter implements PresentByTagOutputBoundary {
      */
     @Override
     public void prepareFailView(String errorMessage) {
-        final PresentByTagState state = presentByTagViewModel.getState();
-        state.setTagError(errorMessage);
-        presentByTagViewModel.updateState(state);
-
+        final PresentByTagState presentByTagState = presentByTagViewModel.getState();
+        presentByTagState.setTagError(errorMessage);
+        presentByTagViewModel.firePropertyChanged();
     }
 }

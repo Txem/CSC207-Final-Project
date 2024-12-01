@@ -63,7 +63,4 @@ public class ViewModel<T> {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         this.support.addPropertyChangeListener(listener);
     }
-
-    public void updateState(PresentByTagState state) {
-    }
 }
