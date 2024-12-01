@@ -2,6 +2,9 @@ package entity;
 
 import java.util.List;
 
+/**
+ * This class represents a common recipe.
+ */
 public class CommonRecipe implements Recipe {
     private String recipeName;
     private List<Ingredient> ingredients;
@@ -25,10 +28,11 @@ public class CommonRecipe implements Recipe {
     }
 
     @Override
-    public List<Ingredient> getIngredients() {
-        return this.ingredients;
+    public String getIngredients() {
+        return this.ingredients.toString();
     }
 
+    @Override
     public String getInstructions() {
         return this.instructions;
     }
@@ -46,8 +50,19 @@ public class CommonRecipe implements Recipe {
         return this.username;
     }
 
-    public String getTags() {
+    @Override
+    public String getTag() {
         return this.tag;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder ingredientsList = new StringBuilder();
+        for (Ingredient ingredient : ingredients) {
+            ingredientsList.append(ingredient).append("\n");
+        }
+        return "Recipe: " + recipeName + "\nIngredients:\n" + ingredientsList
+                + "Instructions: " + instructions + "\nTag: " + tag + "\nUsername: " + username + "\n";
     }
 
 }

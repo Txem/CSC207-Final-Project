@@ -7,7 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+
 import data_access.*;
+import data_access.ApiExploreDataAccessObject;
+import data_access.FileRecipeDataAccessObject;
+import data_access.InMemoryUserDataAccessObject;
+import data_access.RecipeDataAccessObject;
+import data_access.SearchById;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -20,6 +26,15 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+
+
+import interface_adapter.present_by_tag.PresentByTagController;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
+import interface_adapter.present_by_tag.PresentByTagViewModel;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineState;
+
 import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -35,10 +50,20 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+
+import use_case.search.SearchEngineInputBoundary;
+import use_case.search.SearchEngineInteractor;
+import use_case.search.SearchEngineOutputBoundary;
+import use_case.present_by_tag.PresentByTagDataAccessInterface;
+import use_case.present_by_tag.PresentByTagInputBoundary;
+import use_case.present_by_tag.PresentByTagInteractor;
+import use_case.present_by_tag.PresentByTagOutputBoundary;
+
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import view.*;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -62,6 +87,7 @@ public class AppBuilder {
     // thought question: is the hard dependency below a problem?
     private FileUserDataAccessObject userDataAccessObject = null;
     private final SearchById recipeDataAccessObject = new SearchById();
+    private final PresentByTagDataAccessInterface presentByTagDataAccessObject = new RecipeDataAccessObject(recipe.json");
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -69,6 +95,8 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private PresentByTagViewModel presentByTagViewModel;
+    private PresentByTagView presentByTagView;
     private SearchEngineViewModel searchEngineViewModel;
     private SearchEngineView searchEngineView;
 
@@ -162,6 +190,17 @@ public class AppBuilder {
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
         loggedInView.setChangePasswordController(changePasswordController);
+        return this;
+    }
+
+    public AppBuilder addPresentByTagUseCase() {
+        presentByTagViewModel = new PresentByTagViewModel();
+        final PresentByTagOutputBoundary presentByTagPresnter = new PresentByTagPresenter(presentByTagViewModel);
+        final PresentByTagInputBoundary presentByTagInteractor = new PresentByTagInteractor(
+                presentByTagDataAccessObject, presentByTagPresnter);
+        final PresentByTagController presentByTagController = new PresentByTagController(presentByTagInteractor);
+        presentByTagView = new PresentByTagView(presentByTagController);
+        loggedInView.setPresentByTagController(presentByTagController);
         return this;
     }
 

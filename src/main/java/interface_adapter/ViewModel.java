@@ -1,5 +1,7 @@
 package interface_adapter;
 
+import interface_adapter.present_by_tag.PresentByTagState;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 

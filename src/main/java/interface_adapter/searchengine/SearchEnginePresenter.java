@@ -16,25 +16,20 @@ public class SearchEnginePresenter implements SearchEngineOutputBoundary {
                           SearchEngineViewModel searchEngineViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.searchEngineViewModel = searchEngineViewModel;
-        System.out.println(this.searchEngineViewModel);
-
     }
 
     @Override
     public void prepareSuccessView(SearchEngineOutputData searchEngineOutputData) {
-        System.out.println("we got some answer");
         final SearchEngineState searchEngineState = searchEngineViewModel.getState();
         searchEngineState.setKeyword(searchEngineOutputData.getKeyword());
-        searchEngineState.setRecipes(searchEngineOutputData.getRecipes());
-        searchEngineViewModel.firePropertyChanged("state");
+        searchEngineViewModel.firePropertyChanged();
     }
 
     @Override
     public void prepareErrorView(String errorMessage) {
-        System.out.println("we got some error");
         final SearchEngineState searchEngineState = searchEngineViewModel.getState();
         searchEngineState.setSearchError(errorMessage);
-        searchEngineViewModel.firePropertyChanged("state");
+        searchEngineViewModel.firePropertyChanged();
     }
 
 }

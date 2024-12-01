@@ -35,7 +35,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
     public void fetchAndWriteRecipeById(String recipeId, String username) {
         // Build the API URL
         final String apiUrl = String.format("%s%s?type=public&app_id=%s&app_key=%s", BASE_URL, recipeId,
-                APP_ID, "98322a9a5ec5ced4eb6c6afd4c5d52d4");
+                APP_ID, getApiToken());
 
         // Set up HTTP client
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -77,33 +77,72 @@ public class SearchById implements FavoriteUserDataAccessInterface {
             recipeJson.put("username", username);
             recipeJson.put("tag", "favorite");
 
-            JSONObject fileContent;
+            // Read the existing JSON file, or create a new JSON object if the file doesn't exist
+            JSONObject fileContent = new JSONObject();
             JSONArray recipesArray;
 
             java.io.File file = new java.io.File(OUTPUT_FILE);
-            // Read the file content safely
-            StringBuilder fileData = new StringBuilder();
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    fileData.append(line);
+            if (file.exists()) {
+                // Read the file content safely
+                StringBuilder fileData = new StringBuilder();
+                try (BufferedReader bufferedReader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        fileData.append(line);
+                    }
+                }
+                fileContent = new JSONObject(fileData.toString());
+                recipesArray = fileContent.optJSONArray("recipes");
+            } else {
+                recipesArray = new JSONArray(); // Create a new array if the file doesn't exist
+            }
+
+            // If "recipes" doesn't exist, initialize it
+            if (recipesArray == null) {
+                recipesArray = new JSONArray();
+            }
+
+            // Check if the recipe already exists in the array
+            boolean recipeExists = false;
+            for (int i = 0; i < recipesArray.length(); i++) {
+                JSONObject existingRecipe = recipesArray.getJSONObject(i);
+                if (existingRecipe.getString("uri").equals(recipeJson.getString("uri"))) {
+                    // Recipe exists, append the username to the "username" array
+                    JSONArray usernames = existingRecipe.optJSONArray("username");
+                    if (usernames == null) {
+                        // Initialize "username" as a new array if it doesn't exist
+                        usernames = new JSONArray();
+                        existingRecipe.put("username", usernames);
+                    }
+                    if (!usernames.toList().contains(username)) {
+                        usernames.put(username); // Append the new username if not already present
+                    }
+                    recipeExists = true;
+                    break;
                 }
             }
-            fileContent = new JSONObject(fileData.toString());
-            recipesArray = fileContent.optJSONArray("recipes");
 
-            // Add the new recipe to the array, even if it exists
-            recipesArray.put(recipeJson);
+            if (!recipeExists) {
+                // Add username and tag to the recipe
+                JSONArray usernames = new JSONArray();
+                usernames.put(username);
+                recipeJson.put("username", usernames);
+                recipeJson.put("tag", "favorite");
+
+                // Add the new recipe to the array
+                recipesArray.put(recipeJson);
+            }
 
             // Update the "recipes" key in the JSON object
             fileContent.put("recipes", recipesArray);
 
             // Write the updated JSON back to the file
             try (FileWriter writer = new FileWriter(OUTPUT_FILE)) {
-                writer.write(fileContent.toString(4)); // Pretty print with 4 spaces
+                writer.write(fileContent.toString(4));
                 System.out.println("Recipe added to " + OUTPUT_FILE);
             }
-        } catch (IOException | JSONException e) {
+        }
+        catch (IOException | JSONException e) {
             throw new RuntimeException("Error appending recipe to file", e);
         }
     }

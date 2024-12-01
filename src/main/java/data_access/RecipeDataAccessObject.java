@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,12 +45,15 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
             final String recipeName;
             recipeName = recipeNode.get("label").asText();
             final String instruction;
-            instruction = "Visit: " + recipeNode.get("url").asText();
-            final List<String> tags = new ArrayList<>();
-            tags.add(recipeNode.get("tag").asText());
-            if (recipeNode.has("dietLabels")) {
-                recipeNode.get("dietLabels").forEach(label -> tags.add(label.asText()));
+            if (recipeNode.get("instructions") == null) {
+                instruction = "No instructions provided.";
             }
+            else {
+                instruction = recipeNode.get("instructions").asText();
+            }
+            final String tag;
+            tag = recipeNode.get("tag").asText();
+            final String username = recipeNode.get("username").asText();
 
             final List<Ingredient> ingredients = new ArrayList<>();
             recipeNode.get("ingredients").forEach(ingredientNode -> {
@@ -59,7 +63,7 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
                 ingredients.add(new Ingredient(name, quantity));
             });
 
-            final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, null,null);
+            final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, username, tag);
             commonRecipes.add(commonRecipe);
         }
 
@@ -78,7 +82,7 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
     @Override
     public boolean exist(String tag) throws IOException {
         for (CommonRecipe recipe : getAllRecipes()) {
-            if (recipe.getTags().contains(tag)) {
+            if (Objects.equals(recipe.getTag(), tag)) {
                 return true;
             }
         }
@@ -90,7 +94,7 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         if (exist(tag)) {
             final List<CommonRecipe> presentations = new ArrayList<>();
             for (CommonRecipe recipe : getAllRecipes()) {
-                if (recipe.getTags().contains(tag)) {
+                if (Objects.equals(recipe.getTag(), tag)) {
                     presentations.add(recipe);
                 }
             }
@@ -102,5 +106,3 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         }
     }
 }
-
-
