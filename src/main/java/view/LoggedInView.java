@@ -21,6 +21,7 @@ import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
 import interface_adapter.favorite.FavoriteController;
 import interface_adapter.logout.LogoutController;
+import interface_adapter.present_by_tag.PresentByTagController;
 import interface_adapter.searchengine.SearchEngineController;
 import interface_adapter.searchengine.SearchEnginePresenter;
 import interface_adapter.searchengine.SearchEngineViewModel;
@@ -40,6 +41,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private SearchEngineViewModel searchEngineViewModel;
     private SearchEngineController searchEngineController;
     private FavoriteController favoriteController;
+    private PresentByTagController presentByTagController;
 
     private final JLabel username;
 
@@ -50,6 +52,7 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JButton searchEngine;
     private final JButton addRecipe;
     private final JButton favorite;
+    private final JButton presentByTag;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
         this.loggedInViewModel = loggedInViewModel;
@@ -80,6 +83,9 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         changePassword = new JButton("Change Password");
         buttons.add(changePassword);
+
+        presentByTag = new JButton("Present By Tag");
+        buttons.add(presentByTag);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -162,6 +168,15 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                 }
         );
 
+        presentByTag.addActionListener(
+                evt -> {
+                    if (evt.getSource().equals(presentByTag)) {
+                        final PresentByTagView presentByTagView = new PresentByTagView(presentByTagController);
+                        presentByTagView.setVisible(true);
+                    }
+                }
+        );
+
         this.add(title);
         this.add(usernameInfo);
         this.add(username);
@@ -199,11 +214,16 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     public void setAddRecipeController(AddRecipeController addRecipeController) {
         this.addRecipeController = addRecipeController;
     }
+
     public void setFavoriteController(FavoriteController favoritecontroller) {
         this.favoriteController = favoritecontroller;
     }
 
     public void setSearchEngineController(SearchEngineController searchEngineController) {
         this.searchEngineController = searchEngineController;
+    }
+
+    public void setPresentByTagController(PresentByTagController presentByTagController) {
+        this.presentByTagController = presentByTagController;
     }
 }

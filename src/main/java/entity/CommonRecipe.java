@@ -46,8 +46,19 @@ public class CommonRecipe implements Recipe {
         return this.username;
     }
 
-    public String getTags() {
+    @Override
+    public String getTag() {
         return this.tag;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder ingredientsList = new StringBuilder();
+        for (Ingredient ingredient : ingredients) {
+            ingredientsList.append(ingredient).append("\n");
+        }
+        return "Recipe: " + recipeName + "\nIngredients:\n" + ingredientsList
+                + "Instructions: " + instructions + "\nTag: " + tag + "\nUsername: " + username + "\n";
     }
 
 }

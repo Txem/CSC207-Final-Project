@@ -20,6 +20,15 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.present_by_tag.PresentByTagController;
+import interface_adapter.present_by_tag.PresentByTagController;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
+import interface_adapter.present_by_tag.PresentByTagViewModel;
+import interface_adapter.present_by_tag.PresentByTagViewModel;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineState;
 import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -35,6 +44,14 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.present_by_tag.PresentByTagDataAccessInterface;
+import use_case.present_by_tag.PresentByTagDataAccessInterface;
+import use_case.present_by_tag.PresentByTagInputBoundary;
+import use_case.present_by_tag.PresentByTagInteractor;
+import use_case.present_by_tag.PresentByTagOutputBoundary;
+import use_case.search.SearchEngineInputBoundary;
+import use_case.search.SearchEngineInteractor;
+import use_case.search.SearchEngineOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -63,6 +80,9 @@ public class AppBuilder {
     private FileUserDataAccessObject userDataAccessObject = null;
     private final SearchById recipeDataAccessObject = new SearchById();
 
+    private final PresentByTagDataAccessInterface presentByTagDataAccessObject =
+            new RecipeDataAccessObject("recipe.json");
+
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
@@ -71,6 +91,8 @@ public class AppBuilder {
     private LoginView loginView;
     private SearchEngineViewModel searchEngineViewModel;
     private SearchEngineView searchEngineView;
+    private PresentByTagViewModel presentByTagViewModel;
+    private PresentByTagView presentByTagView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -162,6 +184,20 @@ public class AppBuilder {
         final ChangePasswordController changePasswordController =
                 new ChangePasswordController(changePasswordInteractor);
         loggedInView.setChangePasswordController(changePasswordController);
+        return this;
+    }
+
+    /**
+     * Adds PresentByTag Use Case to the application.
+     */
+    public AppBuilder addPresentByTagUseCase() {
+        presentByTagViewModel = new PresentByTagViewModel();
+        final PresentByTagOutputBoundary presentByTagPresnter = new PresentByTagPresenter(presentByTagViewModel);
+        final PresentByTagInputBoundary presentByTagInteractor = new PresentByTagInteractor(
+                presentByTagDataAccessObject, presentByTagPresnter);
+        final PresentByTagController presentByTagController = new PresentByTagController(presentByTagInteractor);
+        presentByTagView = new PresentByTagView(presentByTagController);
+        loggedInView.setPresentByTagController(presentByTagController);
         return this;
     }
 
