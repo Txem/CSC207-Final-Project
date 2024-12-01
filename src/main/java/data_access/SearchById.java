@@ -35,7 +35,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
     public void fetchAndWriteRecipeById(String recipeId, String username) {
         // Build the API URL
         final String apiUrl = String.format("%s%s?type=public&app_id=%s&app_key=%s", BASE_URL, recipeId,
-                APP_ID, "98322a9a5ec5ced4eb6c6afd4c5d52d4");
+                APP_ID, SearchById.getApiToken());
 
         // Set up HTTP client
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -53,14 +53,16 @@ public class SearchById implements FavoriteUserDataAccessInterface {
 
                 final JSONObject recipeJson = responseBody.getJSONObject("recipe");
 
-                // Write the entire JSON response to a file
-                writeJsonToFile(recipeJson, username);
-            }
-            else {
+                if (hasUserSavedRecipe(recipeJson.getString("uri"), username)) {
+                    System.out.println("Already downloaded");
+                }
+                else {
+                    writeJsonToFile(recipeJson, username);
+                }
+            } else {
                 throw new RuntimeException("Failed to fetch recipe: " + response.message());
             }
-        }
-        catch (IOException | JSONException e) {
+        } catch (IOException | JSONException e) {
             throw new RuntimeException("Error fetching recipe by ID", e);
         }
     }
@@ -69,7 +71,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
      * Write JSON object to a file.
      *
      * @param recipeJson the recipe.
-     * @param username the user's name.
+     * @param username   the user's name.
      */
     private void writeJsonToFile(JSONObject recipeJson, String username) {
         try {
@@ -106,6 +108,67 @@ public class SearchById implements FavoriteUserDataAccessInterface {
         } catch (IOException | JSONException e) {
             throw new RuntimeException("Error appending recipe to file", e);
         }
+    }
+
+    private static final String RECIPE_FILE = "src/recipe.json"; // Path to the recipe file
+
+    /**
+     * Check if a user has already saved the same recipe.
+     *
+     * @param uri      The unique ID of the recipe to check.
+     * @param username The username to check for.
+     * @return True if the user already saved the recipe, false otherwise.
+     */
+    public boolean hasUserSavedRecipe(String uri, String username) {
+        try {
+            // Read the JSON file
+            JSONObject fileContent = readJsonFile();
+            if (fileContent == null) {
+                return false; // No recipes file exists
+            }
+
+            // Get the recipes array
+            JSONArray recipesArray = fileContent.optJSONArray("recipes");
+            if (recipesArray == null) {
+                return false; // No recipes exist in the file
+            }
+
+            // Iterate through the recipes and check if the user already saved the recipe
+            for (int i = 0; i < recipesArray.length(); i++) {
+                JSONObject recipe = recipesArray.getJSONObject(i);
+                if (recipe.getString("uri").equals(uri) && recipe.getString("username").equals(username)) {
+                    return true; // User already saved this recipe
+                }
+            }
+            return false; // Recipe exists, but the user has not saved it
+        }
+        catch (IOException | JSONException e) {
+            throw new RuntimeException("Error checking if user saved the recipe", e);
+        }
+    }
+
+    /**
+     * Read the JSON file containing the recipes.
+     *
+     * @return The JSONObject representing the file's content, or null if the file does not exist.
+     */
+    private JSONObject readJsonFile() throws IOException, JSONException {
+        java.io.File file = new java.io.File(OUTPUT_FILE);
+        if (!file.exists()) {
+            return null; // File does not exist
+        }
+
+        // Read the file content
+        StringBuilder fileData = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                fileData.append(line);
+            }
+        }
+
+        // Convert file content to JSON object
+        return new JSONObject(fileData.toString());
     }
 
     /**

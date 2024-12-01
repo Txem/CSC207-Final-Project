@@ -1,9 +1,12 @@
 package use_case.present_by_tag;
 
-import entity.CommonRecipe;
-
 import java.util.List;
 
+import entity.CommonRecipe;
+
+/**
+ * This class is used to present the output data of the use case "Present by Tag".
+ */
 public class PresentByTagOutputData {
     private String tag;
     private List<CommonRecipe> recipes;

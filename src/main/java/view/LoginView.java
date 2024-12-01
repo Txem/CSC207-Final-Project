@@ -65,13 +65,24 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                             loginController.execute(
                                     currentState.getUsername(),
                                     currentState.getPassword()
+
                             );
                         }
                     }
                 }
         );
 
-        cancel.addActionListener(this);
+        cancel.addActionListener(
+                // This creates an anonymous subclass of ActionListener and instantiates it.
+                evt -> {
+                    if (evt.getSource().equals(cancel)) {
+                        // 1. get the state out of the loggedInViewModel. It contains the username.
+                        // 2. Execute the logout Controller.
+                        loginViewModel.firePropertyChanged();
+                        loginController.switchToSignup();
+                    }
+                }
+        );
 
         usernameInputField.getDocument().addDocumentListener(new DocumentListener() {
 

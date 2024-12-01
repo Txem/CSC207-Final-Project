@@ -1,21 +1,17 @@
 package app;
 
-import java.awt.CardLayout;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
-import data_access.FileRecipeDataAccessObject;
-import data_access.InMemoryUserDataAccessObject;
-import data_access.SearchById;
+import data_access.*;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.add_recipe.AddRecipeController;
-import interface_adapter.add_recipe.AddRecipePresenter;
-import interface_adapter.add_recipe.AddRecipeState;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.ChangePasswordPresenter;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -25,15 +21,23 @@ import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
+import interface_adapter.present_by_tag.PresentByTagController;
+import interface_adapter.present_by_tag.PresentByTagController;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
+import interface_adapter.present_by_tag.PresentByTagPresenter;
+import interface_adapter.present_by_tag.PresentByTagViewModel;
+import interface_adapter.present_by_tag.PresentByTagViewModel;
+import interface_adapter.searchengine.SearchEngineController;
+import interface_adapter.searchengine.SearchEnginePresenter;
+import interface_adapter.searchengine.SearchEngineState;
+import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import use_case.AddRecipe.RecipeDataAccessInterface;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInteractor;
 import use_case.change_password.ChangePasswordOutputBoundary;
 import use_case.favorite.FavoriteInputBoundary;
-import use_case.favorite.FavoriteInputData;
 import use_case.favorite.FavoriteInteractor;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -41,13 +45,18 @@ import use_case.login.LoginOutputBoundary;
 import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
+import use_case.present_by_tag.PresentByTagDataAccessInterface;
+import use_case.present_by_tag.PresentByTagDataAccessInterface;
+import use_case.present_by_tag.PresentByTagInputBoundary;
+import use_case.present_by_tag.PresentByTagInteractor;
+import use_case.present_by_tag.PresentByTagOutputBoundary;
+import use_case.search.SearchEngineInputBoundary;
+import use_case.search.SearchEngineInteractor;
+import use_case.search.SearchEngineOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
-import view.LoggedInView;
-import view.LoginView;
-import view.SignupView;
-import view.ViewManager;
+import view.*;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -69,9 +78,11 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     // thought question: is the hard dependency below a problem?
-    private final InMemoryUserDataAccessObject userDataAccessObject = new InMemoryUserDataAccessObject();
+    private FileUserDataAccessObject userDataAccessObject = null;
     private final SearchById recipeDataAccessObject = new SearchById();
 
+    private final PresentByTagDataAccessInterface presentByTagDataAccessObject =
+            new RecipeDataAccessObject("recipe.json");
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -79,9 +90,22 @@ public class AppBuilder {
     private LoggedInViewModel loggedInViewModel;
     private LoggedInView loggedInView;
     private LoginView loginView;
+    private SearchEngineViewModel searchEngineViewModel;
+    private SearchEngineView searchEngineView;
+    private PresentByTagViewModel presentByTagViewModel;
+    private PresentByTagView presentByTagView;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        try {
+            userDataAccessObject = new FileUserDataAccessObject("user.csv", userFactory);
+            System.out.println("FileUserDataAccessObject created successfully!");
+        }
+        catch (IOException e) {
+            // Handle the exception (e.g., log it or show an error message)
+            System.err.println("Error creating FileUserDataAccessObject: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -165,6 +189,20 @@ public class AppBuilder {
     }
 
     /**
+     * Adds PresentByTag Use Case to the application.
+     */
+    public AppBuilder addPresentByTagUseCase() {
+        presentByTagViewModel = new PresentByTagViewModel();
+        final PresentByTagOutputBoundary presentByTagPresnter = new PresentByTagPresenter(presentByTagViewModel);
+        final PresentByTagInputBoundary presentByTagInteractor = new PresentByTagInteractor(
+                presentByTagDataAccessObject, presentByTagPresnter);
+        final PresentByTagController presentByTagController = new PresentByTagController(presentByTagInteractor);
+        presentByTagView = new PresentByTagView(presentByTagController);
+        loggedInView.setPresentByTagController(presentByTagController);
+        return this;
+    }
+
+    /**
      * Adds the Logout Use Case to the application.
      * @return this builder
      */
@@ -179,6 +217,7 @@ public class AppBuilder {
         loggedInView.setLogoutController(logoutController);
         return this;
     }
+
     /**
      * Adds the favorite Use Case to the application.
      */
@@ -190,20 +229,63 @@ public class AppBuilder {
 
         return this;
     }
+
     /**
      * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("MyRecipe");
+        final JFrame application = new JFrame("Genshin Impact Recipe App");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        application.add(cardPanel);
+        // Load the background image
+        String imagePath = "img/image.jpg";
+        BufferedImage backgroundImage = null;
+        try {
+            backgroundImage = ImageIO.read(new File(imagePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to load background image.");
+        }
 
+        // Get the image dimensions and set the frame size accordingly
+        if (backgroundImage != null) {
+            application.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
+            System.out.println("use image size");
+        } else {
+            application.setSize(1024, 768); // Default size if image fails to load
+        }
+
+        application.setLocationRelativeTo(null); // Center the frame
+
+        // Create the main panel with the background
+        BackgroundPanel mainPanel = new BackgroundPanel(imagePath);
+        mainPanel.setLayout(new BorderLayout());
+
+        // Add the title panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false); // Transparent panel
+        JLabel titleLabel = new JLabel("Welcome to Genshin Impact Recipe App", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+        titleLabel.setForeground(Color.BLACK); // Change font color to black
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black background
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        // Add the card panel (transparent)
+        cardPanel.setOpaque(false);
+        mainPanel.add(cardPanel, BorderLayout.CENTER);
+
+        application.setContentPane(mainPanel);
+
+        // Initialize view state
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
+
     }
 
 }
