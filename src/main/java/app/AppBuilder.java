@@ -1,11 +1,12 @@
 package app;
 
-import java.awt.CardLayout;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 import data_access.*;
 import entity.CommonUserFactory;
@@ -234,13 +235,57 @@ public class AppBuilder {
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("MyRecipe");
+        final JFrame application = new JFrame("Genshin Impact Recipe App");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        application.add(cardPanel);
+
+        // Load the background image
+        String imagePath = "img/image.jpg";
+        BufferedImage backgroundImage = null;
+        try {
+            backgroundImage = ImageIO.read(new File(imagePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to load background image.");
+        }
+
+        // Get the image dimensions and set the frame size accordingly
+        if (backgroundImage != null) {
+            application.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
+            System.out.println("use image size");
+        } else {
+            application.setSize(1024, 768); // Default size if image fails to load
+        }
+
+        application.setLocationRelativeTo(null); // Center the frame
+
+        // Create the main panel with the background
+        BackgroundPanel mainPanel = new BackgroundPanel(imagePath);
+        mainPanel.setLayout(new BorderLayout());
+
+        // Add the title panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false); // Transparent panel
+        JLabel titleLabel = new JLabel("Welcome to Genshin Impact Recipe App", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+        titleLabel.setForeground(Color.BLACK); // Change font color to black
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black background
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
+
+        // Add the card panel (transparent)
+        cardPanel.setOpaque(false);
+        mainPanel.add(cardPanel, BorderLayout.CENTER);
+
+        application.setContentPane(mainPanel);
+
+        // Initialize view state
         viewManagerModel.setState(signupView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;
+
     }
 
 }
