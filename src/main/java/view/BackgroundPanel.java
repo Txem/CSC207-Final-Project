@@ -25,4 +25,9 @@ public class BackgroundPanel extends JPanel {
         // Draw the background image to fill the panel
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(800, 600);
+    }
 }
