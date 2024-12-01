@@ -13,6 +13,10 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
         this.userDataAccessInterface = userDataAccessInterface;
     }
 
+//    @Override
+//    public void execute(FavoriteInputData favoriteInputData) {
+//
+//    }
     @Override
     public void execute(FavoriteInputData favoriteInputData) {
         final String id = favoriteInputData.getId();
