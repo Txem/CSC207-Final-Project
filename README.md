@@ -10,7 +10,7 @@ Domain: Recipe Organizer, Management, and Recommendation
 
 ## Table of Contents
 - [Contributors](#contributors)
-- [Features](#feature)
+- [Features](#features)
 - [Installation Instructions](#installation-instructions)
 - [Entities](#entities)
 - [License](#license)
@@ -24,7 +24,7 @@ Domain: Recipe Organizer, Management, and Recommendation
 
 - Yinjunnan Xiong
 
-## Feature
+## Features
 
 The app provides many usages such as:
 - Signup and Login: Users can create an account by creating an username and password.
