@@ -1,21 +1,19 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import components.StyledButton;
+import components.StyledLabel;
 import data_access.ApiExploreDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.add_recipe.AddRecipeController;
+import interface_adapter.add_recipe.AddRecipeViewModel;
 import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
@@ -51,7 +49,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
     private final JButton changePassword;
     private final JButton searchEngine;
     private final JButton addRecipe;
-    private final JButton favorite;
     private final JButton presentByTag;
 
     public LoggedInView(LoggedInViewModel loggedInViewModel) {
@@ -59,34 +56,30 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         this.loggedInViewModel.addPropertyChangeListener(this);
 
-        final JLabel title = new JLabel("Logged In Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+//        final JLabel title = new JLabel("Logged In Screen");
+//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
-
-        final JLabel usernameInfo = new JLabel("Currently logged in: ");
-        username = new JLabel();
+                new StyledLabel(loggedInViewModel.getState().getUsername() + " Want to change Password? "), passwordInputField);
+        final JLabel usernameInfo = new StyledLabel("Welcome! User: " + loggedInViewModel.getState().getUsername());
+        username = new JLabel(loggedInViewModel.getState().getUsername());
 
         final JPanel buttons = new JPanel();
-        logOut = new JButton("Log Out");
+        logOut = new StyledButton("Log Out");
         buttons.add(logOut);
 
-        addRecipe = new JButton("Add Recipe");
+        addRecipe = new StyledButton("Add Recipe");
         buttons.add(addRecipe);
 
-        favorite = new JButton("Favorite");
-        buttons.add(favorite);
-
-        searchEngine = new JButton("explore");
+        searchEngine = new StyledButton("explore");
         buttons.add(searchEngine);
 
-        changePassword = new JButton("Change Password");
+        changePassword = new StyledButton("Change Password");
         buttons.add(changePassword);
 
-        presentByTag = new JButton("Present By Tag");
+        presentByTag = new StyledButton("Present By Tag");
         buttons.add(presentByTag);
 
+        buttons.setOpaque(false);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
@@ -154,16 +147,11 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         addRecipe.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(addRecipe)) {
-                        AddRecipeView addRecipeView = new AddRecipeView(addRecipeController);
+                        AddRecipeViewModel addRecipeViewModel = new AddRecipeViewModel();
+                        final LoggedInState currentState = loggedInViewModel.getState();
+                        final String username = currentState.getUsername();
+                        AddRecipeView addRecipeView = new AddRecipeView(addRecipeViewModel, username);
                         addRecipeView.setVisible(true);
-                    }
-                }
-        );
-
-        favorite.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(favorite)) {
-                        favoriteController.execute("recipe_95e75161a387a319a6f9539ddc02b16d", "user2");
                     }
                 }
         );
@@ -176,14 +164,14 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(username);
+//        this.add(title);
+//        this.add(usernameInfo);
+//        this.add(username);
 
         this.add(passwordInfo);
         this.add(passwordErrorField);
         this.add(buttons);
+        this.setOpaque(false);
     }
 
     @Override

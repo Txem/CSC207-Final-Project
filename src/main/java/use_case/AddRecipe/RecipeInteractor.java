@@ -26,7 +26,6 @@ public class RecipeInteractor implements use_case.recipe.RecipeInputBoundary {
                     inputData.getUsername(),
                     inputData.getTags()
             );
-
             recipeDataAccess.saveRecipeForUser(recipe);
 
             RecipeOutputData outputData = new RecipeOutputData("Recipe added successfully", true);

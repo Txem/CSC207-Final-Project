@@ -12,7 +12,6 @@ import entity.CommonRecipe;
 import entity.Ingredient;
 import use_case.present_by_tag.PresentByTagDataAccessInterface;
 
-
 /**
  * This class reads the JSON file and returns a list of CommonRecipe objects.
  * Each CommonRecipe object contains the recipe name, ingredients, instruction, and tags.
@@ -26,7 +25,6 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
         this.filePath = filePath;
         this.objectMapper = new ObjectMapper();
     }
-
 
     /**
      * This method reads the JSON file and returns a list of CommonRecipe objects.
@@ -58,8 +56,15 @@ public class RecipeDataAccessObject implements PresentByTagDataAccessInterface {
             final List<Ingredient> ingredients = new ArrayList<>();
             recipeNode.get("ingredients").forEach(ingredientNode -> {
                 final String name = ingredientNode.get("text").asText();
-                final String quantity = ingredientNode.get("quantity").asText() + " "
-                        + ingredientNode.get("measure").asText();
+                String quantity = "";
+                if (ingredientNode.has("measure")) {
+                    quantity = ingredientNode.get("quantity").asText() + " "
+                            + ingredientNode.get("measure").asText();
+                }
+                else {
+                    quantity = ingredientNode.get("quantity").asText();
+                }
+
                 ingredients.add(new Ingredient(name, quantity));
             });
 
