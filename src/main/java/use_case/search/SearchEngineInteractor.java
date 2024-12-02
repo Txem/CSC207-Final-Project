@@ -3,6 +3,7 @@ package use_case.search;
 import java.util.List;
 
 import entity.CommonRecipe;
+import entity.OnlineRecipe;
 import entity.Recipe;
 
 /**
@@ -27,7 +28,7 @@ public class SearchEngineInteractor implements SearchEngineInputBoundary {
             searchEnginePresenter.prepareErrorView(keyword + " can't be found in current database ");
         }
         else {
-            final List<CommonRecipe> recipes = userDataAccessObject.getRecipeList(keyword);
+            final List<OnlineRecipe> recipes = userDataAccessObject.getRecipeList(keyword);
             userDataAccessObject.setCurrentKeyword(keyword);
             final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(recipes,
                     true, keyword);

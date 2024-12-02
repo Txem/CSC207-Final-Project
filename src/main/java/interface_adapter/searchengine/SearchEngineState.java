@@ -3,6 +3,7 @@ package interface_adapter.searchengine;
 import java.util.List;
 
 import entity.CommonRecipe;
+import entity.OnlineRecipe;
 
 /**
  * The search state for the search Engine.
@@ -10,7 +11,7 @@ import entity.CommonRecipe;
 public class SearchEngineState {
     private String keyword;
     private String searchError;
-    private List<CommonRecipe> recipes;
+    private List<OnlineRecipe> recipes;
 
     public String getKeyword() {
         return keyword;
@@ -20,11 +21,11 @@ public class SearchEngineState {
         return searchError;
     }
 
-    public List<CommonRecipe> getRecipes() {
+    public List<OnlineRecipe> getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(List<CommonRecipe> recipes) {
+    public void setRecipes(List<OnlineRecipe> recipes) {
         this.recipes = recipes;
     }
 

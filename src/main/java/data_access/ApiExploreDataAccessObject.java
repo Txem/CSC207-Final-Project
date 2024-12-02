@@ -29,7 +29,7 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
     private static final String PASSWORD = "password";
     private static final String MESSAGE = "message";
 
-    private List<CommonRecipe> recipes;
+    private List<OnlineRecipe> recipes;
     private String keyword;
     private boolean resultExist;
 
@@ -58,7 +58,7 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
     }
 
     @Override
-    public List<CommonRecipe> getRecipeList(String keyword) {
+    public List<OnlineRecipe> getRecipeList(String keyword) {
         // Make an API call to get the user object.
         recipes.clear();
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -88,9 +88,16 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
                     }
                     final JSONObject recipeObject = recipesJSONArray.getJSONObject(i).getJSONObject("recipe");
                     final String instruction = recipeObject.has("institution") ? recipeObject.getString("institution") : "Unknown";
-                    final CommonRecipe commonRecipe = new CommonRecipe(recipeName, ingredients, instruction, null, null);
+                    final OnlineRecipe commonRecipe = new OnlineRecipe(recipeName, ingredients, instruction, null, null);
+                    String imageUrl = commonRecipe.getImageUrl();
+                    if (recipeObject.getJSONObject("images").has("THUMBNAIL")) {
+                        imageUrl = recipeObject.getJSONObject("images").getJSONObject("THUMBNAIL").getString("url");
+                    }
+                    final String targeturl = recipeObject.getString("url");
                     final String uri = recipesJSONArray.getJSONObject(i).getJSONObject("recipe").getString("uri");
                     final String recipeId = extractId(uri);
+                    commonRecipe.setUrl(targeturl);
+                    commonRecipe.setImageUrl(imageUrl);
                     commonRecipe.setRecipeId(recipeId);
                     recipes.add(commonRecipe);
                 }

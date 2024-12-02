@@ -20,6 +20,7 @@ import javax.swing.event.DocumentListener;
 
 import data_access.ApiExploreDataAccessObject;
 import data_access.SearchById;
+import entity.OnlineRecipe;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.favorite.FavoriteController;
@@ -106,7 +107,7 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
                         resultsPanel.removeAll();
                         resultsPanel.revalidate();
                         resultsPanel.repaint();
-                        searchViewModel.getState().setRecipes(new ArrayList<CommonRecipe>());
+                        searchViewModel.getState().setRecipes(new ArrayList<OnlineRecipe>());
                         final SearchEngineState currentState = searchViewModel.getState();
                         searchController.execute(searchInputField.getText());
                     }
@@ -161,7 +162,7 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
         }
     }
 
-    private void updateResults(List<CommonRecipe> recipes) {
+    private void updateResults(List<OnlineRecipe> recipes) {
         System.out.println("updating");
 
         resultsPanel.removeAll();
@@ -172,9 +173,9 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
             resultsPanel.removeAll();
             resultsPanel.revalidate();
             resultsPanel.repaint();
-            searchViewModel.getState().setRecipes(new ArrayList<CommonRecipe>());
+            searchViewModel.getState().setRecipes(new ArrayList<OnlineRecipe>());
             System.out.println(searchViewModel.getState().getRecipes().size());
-            for (CommonRecipe recipe : recipes) {
+            for (OnlineRecipe recipe : recipes) {
                 resultsPanel.add(createRecipeCard(recipe));
             }
             searchViewModel.getState().setRecipes(recipes);
@@ -183,7 +184,7 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
         resultsPanel.repaint();
     }
 
-    private JPanel createRecipeCard(CommonRecipe recipe) {
+    private JPanel createRecipeCard(OnlineRecipe recipe) {
         JPanel card = new JPanel(new BorderLayout(10, 10));
         card.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(255, 255, 255), 1, true),
@@ -197,10 +198,10 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
         leftPanel.setPreferredSize(new Dimension(150, 300));
 
         JLabel imageLabel;
-        String targetUrl = "https://www.example.com";
+        String targetUrl = recipe.getUrl();
 
         try {
-            String imageUrl = "https://www.edamam.com/food-img/ecb/ecb3f5aaed96d0188c21b8369be07765.jpg";
+            String imageUrl = recipe.getImageUrl();
             ImageIcon imageIcon = new ImageIcon(new URL(imageUrl));
             Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             imageLabel = new JLabel(new ImageIcon(scaledImage));
@@ -271,7 +272,7 @@ public class SearchEngineView extends JFrame implements ActionListener, Property
     }
 
     // 动态计算卡片高度
-    private int calculateCardHeight(CommonRecipe recipe) {
+    private int calculateCardHeight(OnlineRecipe recipe) {
         int baseHeight = 150; // 基础高度
         int ingredientsCount = recipe.getIngredients().size();
         int extraHeight = ingredientsCount * 20; // 每个配料增加的高度

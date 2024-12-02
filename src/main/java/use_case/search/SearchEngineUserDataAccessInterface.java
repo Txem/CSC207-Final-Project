@@ -3,6 +3,7 @@ package use_case.search;
 import java.util.List;
 
 import entity.CommonRecipe;
+import entity.OnlineRecipe;
 import entity.Recipe;
 
 /**
@@ -28,7 +29,7 @@ public interface SearchEngineUserDataAccessInterface {
      * @param keyword the keyword from the user type
      * @return the json response (convert to recipe class).
      */
-    List<CommonRecipe> getRecipeList(String keyword);
+    List<OnlineRecipe> getRecipeList(String keyword);
 
     /**
      * Sets the username indicating who is the current user of the application.
