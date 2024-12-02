@@ -40,4 +40,9 @@ public class PresentByTagInteractor implements PresentByTagInputBoundary {
             return recipes;
         }
     }
+
+    @Override
+    public List<CommonRecipe> getAllRecipes() throws IOException {
+        return presentByTagDataAccessObject.getAllRecipes();
+    }
 }

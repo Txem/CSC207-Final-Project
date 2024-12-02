@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -10,8 +9,6 @@ import javax.swing.event.DocumentListener;
 
 import components.StyledButton;
 import components.StyledLabel;
-import data_access.ApiExploreDataAccessObject;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.add_recipe.AddRecipeController;
 import interface_adapter.add_recipe.AddRecipeViewModel;
 import interface_adapter.change_password.ChangePasswordController;
@@ -21,9 +18,7 @@ import interface_adapter.favorite.FavoriteController;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.present_by_tag.PresentByTagController;
 import interface_adapter.searchengine.SearchEngineController;
-import interface_adapter.searchengine.SearchEnginePresenter;
 import interface_adapter.searchengine.SearchEngineViewModel;
-import use_case.search.SearchEngineInteractor;
 
 /**
  * The View for when the user is logged into the program.
@@ -56,8 +51,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         this.loggedInViewModel.addPropertyChangeListener(this);
 
-//        final JLabel title = new JLabel("Logged In Screen");
-//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new StyledLabel(loggedInViewModel.getState().getUsername() + " Want to change Password? "), passwordInputField);
         final JLabel usernameInfo = new StyledLabel("Welcome! User: " + loggedInViewModel.getState().getUsername());

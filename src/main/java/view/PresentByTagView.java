@@ -163,11 +163,13 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PresentByTagView extends JFrame {
     private JTextField tagInputField;
     private JButton searchButton;
+    private JButton favoriteButton;
     private JPanel resultPanel;
     private final PresentByTagController presentByTagController;
 
@@ -204,9 +206,20 @@ public class PresentByTagView extends JFrame {
         searchButton.setFocusPainted(false);
         searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         searchButton.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255))); // 白色边框
+
+        // 添加 Favorite 按钮
+        favoriteButton = new JButton("Favorite");
+        favoriteButton.setBackground(new Color(40, 40, 40)); // 深色背景
+        favoriteButton.setForeground(new Color(255, 255, 255)); // 白色文字
+        favoriteButton.setFont(new Font("Arial", Font.BOLD, 14));
+        favoriteButton.setFocusPainted(false);
+        favoriteButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        favoriteButton.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255))); // 白色边框
+
         inputPanel.add(label);
         inputPanel.add(tagInputField);
         inputPanel.add(searchButton);
+        inputPanel.add(favoriteButton);
 
         // 结果显示区域
         resultPanel = new JPanel();
@@ -233,7 +246,17 @@ public class PresentByTagView extends JFrame {
         // 搜索按钮事件
         searchButton.addActionListener((ActionEvent e) -> {
             try {
-                searchRecipes();
+                searchRecipes(tagInputField.getText().trim());
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error occurred while searching: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        // 为 Favorite 按钮添加事件
+        favoriteButton.addActionListener((ActionEvent e) -> {
+            try {
+                searchRecipes("favorite");
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Error occurred while searching: " + ex.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -242,50 +265,89 @@ public class PresentByTagView extends JFrame {
 
         // 为按钮添加点击动画
         addAnimationToButton(searchButton);
+        addAnimationToButton(favoriteButton);
     }
 
-    private void searchRecipes() throws IOException {
-        String tag = tagInputField.getText().trim();
+    private void searchRecipes(String tag) throws IOException {
         resultPanel.removeAll(); // 清空旧内容
-        if (!tag.isEmpty()) {
-            final List<CommonRecipe> recipes = this.presentByTagController.execute(tag);
 
+        List<CommonRecipe> recipes;
+        if (tag.isEmpty()) {
+            // 如果标签为空，展示所有配方
+            recipes = this.presentByTagController.getAllRecipes();
+        } else {
+            recipes = this.presentByTagController.execute(tag);
+
+            // 如果没有完全匹配结果，则查找相关内容
             if (recipes.isEmpty()) {
-                final JLabel noResultLabel = new JLabel("No recipes found for tag: " + tag, JLabel.CENTER);
-                noResultLabel.setForeground(new Color(255, 0, 0)); // 红色
-                noResultLabel.setFont(new Font("Arial", Font.BOLD, 16));
-                resultPanel.add(noResultLabel);
-            } else {
-                for (Recipe recipe : recipes) {
-                    resultPanel.add(createRecipeCard(recipe));
+                recipes = findSimilarRecipes(tag);
+                if (recipes.isEmpty()) {
+                    JLabel noResultLabel = new JLabel("No recipes found for tag: " + tag, JLabel.CENTER);
+                    noResultLabel.setForeground(new Color(255, 0, 0)); // 红色
+                    noResultLabel.setFont(new Font("Arial", Font.BOLD, 16));
+                    resultPanel.add(noResultLabel);
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Tag cannot be empty!", "Warning", JOptionPane.WARNING_MESSAGE);
         }
+
+        for (Recipe recipe : recipes) {
+            resultPanel.add(createRecipeCard(recipe));
+        }
+
         resultPanel.revalidate();
         resultPanel.repaint();
     }
 
+    private List<CommonRecipe> findSimilarRecipes(String tag) throws IOException {
+        List<CommonRecipe> allRecipes = this.presentByTagController.getAllRecipes(); // 假设获取所有配方
+        List<CommonRecipe> similarRecipes = new ArrayList<>();
+
+        for (CommonRecipe recipe : allRecipes) {
+            if (isTagSimilar(tag, recipe.getTag())) {
+                similarRecipes.add(recipe);
+            }
+        }
+        return similarRecipes;
+    }
+
+    private boolean isTagSimilar(String inputTag, String recipeTag) {
+        int distance = calculateLevenshteinDistance(inputTag.toLowerCase(), recipeTag.toLowerCase());
+        return distance <= 2; // 允许最多两个字符的编辑距离
+    }
+
+    private int calculateLevenshteinDistance(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1]));
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+
     private JPanel createRecipeCard(Recipe recipe) {
         JPanel card = new JPanel(new BorderLayout(10, 10));
-        // 设置卡片为半透明背景
         card.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(new Color(255, 255, 255), 1, true), // 白色边框
+                new LineBorder(new Color(255, 255, 255), 1, true),
                 new EmptyBorder(10, 10, 10, 10)
         ));
-        // 设置背景为半透明黑色
-        card.setBackground(new Color(0, 0, 0, 150)); // 半透明黑色背景
+        card.setBackground(new Color(0, 0, 0, 150));
         card.setMaximumSize(new Dimension(750, 200));
 
-        // 标题
         JLabel title = new JLabel(recipe.getName(), JLabel.LEFT);
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setForeground(new Color(255, 255, 255));
 
-        // 配料和描述部分
         JTextArea details = new JTextArea();
-        details.setText("By: " + recipe.getUserName() + "\n\nInstructions: "
+        details.setText("By: " + recipe.getUserName() + "\nTag: " + recipe.getTag() + "\n\nInstructions: "
                 + recipe.getInstructions() + "\n\nIngredients:\n");
         for (Ingredient ingredient : recipe.getIngredients()) {
             details.append("- " + ingredient.getIngredientName() + "\n");
@@ -297,17 +359,12 @@ public class PresentByTagView extends JFrame {
         details.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         details.setBackground(new Color(240, 240, 240));
 
-        // 添加标题和详细信息到卡片
         card.add(title, BorderLayout.NORTH);
         card.add(details, BorderLayout.CENTER);
 
         return card;
     }
 
-
-    /**
-     * 自定义面板以实现背景图片动态调整.
-     */
     static class ImagePanel extends JPanel {
         private final Image image;
 
@@ -322,16 +379,11 @@ public class PresentByTagView extends JFrame {
         }
     }
 
-    /**
-     * 为按钮添加动画效果：点击时的放大效果
-     */
     private void addAnimationToButton(JButton button) {
         button.addActionListener(e -> {
-            // 按钮点击时放大
             button.setFont(new Font("Arial", Font.BOLD, 18));
-            button.setBackground(new Color(50, 50, 50)); // 颜色变暗
+            button.setBackground(new Color(50, 50, 50));
 
-            // 使用 Timer 恢复按钮状态
             Timer timer = new Timer(100, ae -> {
                 button.setFont(new Font("Arial", Font.BOLD, 14));
                 button.setBackground(new Color(40, 40, 40));

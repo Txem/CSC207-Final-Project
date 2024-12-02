@@ -22,7 +22,6 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
 
-///**
 // * The View for the Signup Use Case.
 // */
 //public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {

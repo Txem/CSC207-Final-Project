@@ -25,4 +25,6 @@ public interface PresentByTagDataAccessInterface {
      * @throws IOException if an error occurs while accessing the data source
      */
     List<CommonRecipe> getRecipesByTag(String tag) throws IOException;
+
+    List<CommonRecipe> getAllRecipes()throws IOException;
 }
