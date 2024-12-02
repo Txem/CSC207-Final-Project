@@ -10,7 +10,7 @@ Domain: Recipe Organizer, Management, and Recommendation
 
 ## Table of Contents
 - [Contributors](#contributors)
-- [Features](#features)
+- [Features](#feature)
 - [Installation Instructions](#installation-instructions)
 - [Entities](#entities)
 - [License](#license)
