@@ -56,8 +56,6 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 
         this.loggedInViewModel.addPropertyChangeListener(this);
 
-//        final JLabel title = new JLabel("Logged In Screen");
-//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new StyledLabel(loggedInViewModel.getState().getUsername() + " Want to change Password? "), passwordInputField);
         final JLabel usernameInfo = new StyledLabel("Welcome! User: " + loggedInViewModel.getState().getUsername());

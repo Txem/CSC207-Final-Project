@@ -1,6 +1,5 @@
 package use_case.favorite;
 
-import entity.CommonRecipe;
 
 public interface FavoriteUserDataAccessInterface {
 
@@ -9,5 +8,5 @@ public interface FavoriteUserDataAccessInterface {
      * @param recipeId the recipe the user chose to favorite.
      * @param username the username
      */
-    void fetchAndWriteRecipeById(String recipeId, String username);
+    void saveInFile(String recipeId, String username);
 }

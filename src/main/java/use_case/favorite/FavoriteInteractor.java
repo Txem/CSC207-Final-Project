@@ -1,8 +1,5 @@
 package use_case.favorite;
 
-import data_access.SearchById;
-import entity.CommonRecipe;
-
 /**
  * The favorite Interactor.
  */
@@ -13,14 +10,10 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
         this.userDataAccessInterface = userDataAccessInterface;
     }
 
-//    @Override
-//    public void execute(FavoriteInputData favoriteInputData) {
-//
-//    }
     @Override
     public void execute(FavoriteInputData favoriteInputData) {
         final String id = favoriteInputData.getId();
         final String username = favoriteInputData.getUsername();
-        userDataAccessInterface.fetchAndWriteRecipeById(id, username);
+        userDataAccessInterface.saveInFile(id, username);
     }
 }

@@ -32,7 +32,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
      * @param recipeId The unique ID of the recipe to fetch.
      * @param username the username
      */
-    public void fetchAndWriteRecipeById(String recipeId, String username) {
+    public void saveInFile(String recipeId, String username) {
         // Build the API URL
         final String apiUrl = String.format("%s%s?type=public&app_id=%s&app_key=%s", BASE_URL, recipeId,
                 APP_ID, SearchById.getApiToken());
@@ -44,10 +44,9 @@ public class SearchById implements FavoriteUserDataAccessInterface {
                 .addHeader(CONTENT_TYPE_LABEL, CONTENT_TYPE_JSON)
                 .build();
         try {
-            // Execute the request
+
             final Response response = client.newCall(request).execute();
 
-            // Check if the response is successful
             if (response.isSuccessful()) {
                 final JSONObject responseBody = new JSONObject(response.body().string());
 
@@ -75,7 +74,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
      */
     private void writeJsonToFile(JSONObject recipeJson, String username) {
         try {
-            // Add username and tag to the recipe
+
             recipeJson.put("username", username);
             recipeJson.put("tag", "favorite");
 
@@ -83,7 +82,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
             JSONArray recipesArray;
 
             java.io.File file = new java.io.File(OUTPUT_FILE);
-            // Read the file content safely
+
             StringBuilder fileData = new StringBuilder();
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(OUTPUT_FILE))) {
                 String line;
@@ -94,15 +93,12 @@ public class SearchById implements FavoriteUserDataAccessInterface {
             fileContent = new JSONObject(fileData.toString());
             recipesArray = fileContent.optJSONArray("recipes");
 
-            // Add the new recipe to the array, even if it exists
             recipesArray.put(recipeJson);
 
-            // Update the "recipes" key in the JSON object
             fileContent.put("recipes", recipesArray);
 
-            // Write the updated JSON back to the file
             try (FileWriter writer = new FileWriter(OUTPUT_FILE)) {
-                writer.write(fileContent.toString(4)); // Pretty print with 4 spaces
+                writer.write(fileContent.toString(4));
                 System.out.println("Recipe added to " + OUTPUT_FILE);
             }
         } catch (IOException | JSONException e) {
@@ -110,7 +106,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
         }
     }
 
-    private static final String RECIPE_FILE = "src/recipe.json"; // Path to the recipe file
+    private static final String RECIPE_FILE = "src/recipe.json";
 
     /**
      * Check if a user has already saved the same recipe.
@@ -121,26 +117,23 @@ public class SearchById implements FavoriteUserDataAccessInterface {
      */
     public boolean hasUserSavedRecipe(String uri, String username) {
         try {
-            // Read the JSON file
             JSONObject fileContent = readJsonFile();
             if (fileContent == null) {
-                return false; // No recipes file exists
+                return false;
             }
 
-            // Get the recipes array
             JSONArray recipesArray = fileContent.optJSONArray("recipes");
             if (recipesArray == null) {
-                return false; // No recipes exist in the file
+                return false;
             }
 
-            // Iterate through the recipes and check if the user already saved the recipe
             for (int i = 0; i < recipesArray.length(); i++) {
                 JSONObject recipe = recipesArray.getJSONObject(i);
                 if (recipe.getString("uri").equals(uri) && recipe.getString("username").equals(username)) {
-                    return true; // User already saved this recipe
+                    return true;
                 }
             }
-            return false; // Recipe exists, but the user has not saved it
+            return false;
         }
         catch (IOException | JSONException e) {
             throw new RuntimeException("Error checking if user saved the recipe", e);
@@ -155,7 +148,7 @@ public class SearchById implements FavoriteUserDataAccessInterface {
     private JSONObject readJsonFile() throws IOException, JSONException {
         java.io.File file = new java.io.File(OUTPUT_FILE);
         if (!file.exists()) {
-            return null; // File does not exist
+            return null;
         }
 
         // Read the file content
@@ -166,8 +159,6 @@ public class SearchById implements FavoriteUserDataAccessInterface {
                 fileData.append(line);
             }
         }
-
-        // Convert file content to JSON object
         return new JSONObject(fileData.toString());
     }
 
