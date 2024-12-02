@@ -2,13 +2,11 @@ package view;
 
 import data_access.FileRecipeDataAccessObject;
 import entity.Ingredient;
-import entity.User;
 import interface_adapter.add_recipe.AddRecipeController;
 import interface_adapter.add_recipe.AddRecipePresenter;
 import interface_adapter.add_recipe.AddRecipeViewModel;
-import interface_adapter.change_password.LoggedInState;
-import interface_adapter.change_password.LoggedInViewModel;
 import use_case.recipe.RecipeInteractor;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -23,51 +21,114 @@ public class AddRecipeView extends JFrame {
     public AddRecipeView(AddRecipeViewModel addRecipeViewModel, String username) {
         try {
             fileRecipeDataAccessObject = new FileRecipeDataAccessObject();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         final AddRecipePresenter addRecipePresenter = new AddRecipePresenter(addRecipeViewModel);
         final RecipeInteractor recipeInteractor = new RecipeInteractor(fileRecipeDataAccessObject, addRecipePresenter);
         this.addRecipeController = new AddRecipeController(recipeInteractor);
         this.addRecipeViewModel = addRecipeViewModel;
-        setTitle("Create your own Recipe");
-        setSize(400, 300);
+        setTitle("Create Your Own Recipe");
+        setSize(600, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Set background image
+        JLabel backgroundLabel = new JLabel(new ImageIcon("recipe background.jpg"));
+        setContentPane(backgroundLabel);
+        backgroundLabel.setLayout(new GridBagLayout());
 
         // Create UI components
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JLabel titleLabel = new JLabel("Create Your Own Recipe");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(titleLabel, gbc);
+        gbc.gridwidth = 1;
 
         JLabel nameLabel = new JLabel("Recipe Name:");
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         JTextField nameField = new JTextField(20);
+        nameField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        nameField.setToolTipText("Enter the recipe name");
 
         JLabel ingredientsLabel = new JLabel("Ingredients (name:quantity, separated by |):");
-        JTextField ingredientsField = new JTextField(20);
+        ingredientsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        JTextField ingredientsField = new JTextField(50);
+        ingredientsField.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        ingredientsField.setToolTipText("Example: sugar:100g | flour:200g");
 
         JLabel instructionsLabel = new JLabel("Instructions:");
-        JTextArea instructionsArea = new JTextArea(5, 20);
+        instructionsLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        JTextArea instructionsArea = new JTextArea(10, 50);
+        instructionsArea.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        instructionsArea.setLineWrap(true);
+        instructionsArea.setWrapStyleWord(true);
+        JScrollPane instructionsScrollPane = new JScrollPane(instructionsArea);
 
         JButton submitButton = new JButton("Submit");
+        submitButton.setFont(new Font("Arial", Font.BOLD, 14));
+        submitButton.setBackground(new Color(34, 139, 34));
+        submitButton.setForeground(Color.black);
+
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(new Font("Arial", Font.BOLD, 14));
+        cancelButton.setBackground(new Color(220, 20, 60));
+        cancelButton.setForeground(Color.black);
 
-        // Add components to the panel
-        panel.add(nameLabel);
-        panel.add(nameField);
-        panel.add(ingredientsLabel);
-        panel.add(ingredientsField);
-        panel.add(instructionsLabel);
-        panel.add(new JScrollPane(instructionsArea));
-        panel.add(submitButton);
-        panel.add(cancelButton);
+        // Add components to the panel with improved layout
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel.add(nameLabel, gbc);
 
-        add(panel);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        panel.add(nameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(ingredientsLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        panel.add(ingredientsField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        panel.add(instructionsLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(instructionsScrollPane, gbc);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false);
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.add(submitButton);
+        buttonPanel.add(cancelButton);
+
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(buttonPanel, gbc);
+
+        backgroundLabel.add(panel, gbc);
 
         // Button actions
         submitButton.addActionListener(e -> {
-            String name = nameField.getText();
-            String ingredientsInput = ingredientsField.getText();
-            String instructions = instructionsArea.getText();
+            String name = nameField.getText().trim();
+            String ingredientsInput = ingredientsField.getText().trim();
+            String instructions = instructionsArea.getText().trim();
 
             if (name.isEmpty() || ingredientsInput.isEmpty() || instructions.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -87,7 +148,7 @@ public class AddRecipeView extends JFrame {
                 }
 
                 addRecipeController.addRecipe(name, ingredients, instructions, username, "Local");
-                JOptionPane.showMessageDialog(this, "Recipe added successfully!");
+                JOptionPane.showMessageDialog(this, "Recipe added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Failed to add recipe: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -97,4 +158,5 @@ public class AddRecipeView extends JFrame {
         cancelButton.addActionListener(e -> dispose());
     }
 }
+
 
