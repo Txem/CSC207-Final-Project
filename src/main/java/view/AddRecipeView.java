@@ -29,12 +29,19 @@ public class AddRecipeView extends JFrame {
         this.addRecipeController = new AddRecipeController(recipeInteractor);
         this.addRecipeViewModel = addRecipeViewModel;
         setTitle("Create Your Own Recipe");
-        setSize(600, 500);
+        setSize(1000, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Set background image
-        JLabel backgroundLabel = new JLabel(new ImageIcon("recipe background.jpg"));
+        JLabel backgroundLabel = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon icon = new ImageIcon("recipe background.jpg");
+                g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         setContentPane(backgroundLabel);
         backgroundLabel.setLayout(new GridBagLayout());
 
