@@ -16,6 +16,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import components.StyledButton;
+import components.StyledLabel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
@@ -232,35 +234,41 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
     private SignupController signupController;
 
-    private final JButton signUp;
-    private final JButton toLogin;
+    private final StyledButton signUp;
+    private final StyledButton toLogin;
 
     public SignupView(SignupViewModel signupViewModel) {
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
 
         // Set transparent background
-        setOpaque(false); // Make the entire panel transparent
+        setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL, JLabel.CENTER);
-        title.setFont(new Font("Serif", Font.BOLD, 28));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setForeground(Color.WHITE); // Ensure text is visible on any background
+//        final JLabel title = new JLabel(SignupViewModel.TITLE_LABEL, JLabel.CENTER);
+//        title.setFont(new Font("Serif", Font.BOLD, 28));
+//        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        title.setForeground(Color.WHITE);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
+                new StyledLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.PASSWORD_LABEL), passwordInputField);
+                new StyledLabel(SignupViewModel.PASSWORD_LABEL), passwordInputField);
         final LabelTextPanel repeatPasswordInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
+                new StyledLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
 
         // Create buttons with hover effects
+//        final JPanel buttons = new JPanel();
+//        buttons.setOpaque(false); // Transparent button container
+//        toLogin = createStyledButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
+//        buttons.add(toLogin);
+//        signUp = createStyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+//        buttons.add(signUp);
         final JPanel buttons = new JPanel();
-        buttons.setOpaque(false); // Transparent button container
-        toLogin = createStyledButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
+        buttons.setOpaque(false);
+        toLogin = new StyledButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
         buttons.add(toLogin);
-        signUp = createStyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+        signUp = new StyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
 
         signUp.addActionListener(evt -> {
@@ -274,12 +282,16 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 
         toLogin.addActionListener(evt -> signupController.switchToLoginView());
 
+        addUsernameListener();
+        addPasswordListener();
+        addRepeatPasswordListener();
         // Add components to panel
-        add(title);
+//        add(title);
         add(usernameInfo);
         add(passwordInfo);
         add(repeatPasswordInfo);
         add(buttons);
+        this.setOpaque(false);
     }
 
     // Create a styled button with hover effects
@@ -318,7 +330,8 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
             @Override public void insertUpdate(DocumentEvent e) { documentListenerHelper(); }
             @Override public void removeUpdate(DocumentEvent e) { documentListenerHelper(); }
             @Override public void changedUpdate(DocumentEvent e) { documentListenerHelper(); }
-        });
+        }
+        );
     }
 
     private void addPasswordListener() {

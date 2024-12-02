@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import components.StyledButton;
+import components.StyledLabel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
@@ -46,15 +48,20 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         final LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
+                new StyledLabel("Username"), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+                new StyledLabel("Password"), passwordInputField);
 
         final JPanel buttons = new JPanel();
-        logIn = new JButton("log in");
+        logIn = new StyledButton("log in");
         buttons.add(logIn);
-        cancel = new JButton("cancel");
+        cancel = new StyledButton("cancel");
         buttons.add(cancel);
+        buttons.setOpaque(false);
+//        logIn = new JButton("log in");
+//        buttons.add(logIn);
+//        cancel = new JButton("cancel");
+//        buttons.add(cancel);
 
         logIn.addActionListener(
                 new ActionListener() {
@@ -134,11 +141,12 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             }
         });
 
-        this.add(title);
+//        this.add(title);
         this.add(usernameInfo);
         this.add(usernameErrorField);
         this.add(passwordInfo);
         this.add(buttons);
+        this.setOpaque(false);
     }
 
     /**

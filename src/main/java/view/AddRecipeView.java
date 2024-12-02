@@ -1,23 +1,37 @@
 package view;
 
+import data_access.FileRecipeDataAccessObject;
 import entity.Ingredient;
 import entity.User;
 import interface_adapter.add_recipe.AddRecipeController;
+import interface_adapter.add_recipe.AddRecipePresenter;
+import interface_adapter.add_recipe.AddRecipeViewModel;
 import interface_adapter.change_password.LoggedInState;
 import interface_adapter.change_password.LoggedInViewModel;
-
+import use_case.recipe.RecipeInteractor;
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddRecipeView extends JFrame {
     private final AddRecipeController addRecipeController;
+    private final AddRecipeViewModel addRecipeViewModel;
+    private final FileRecipeDataAccessObject fileRecipeDataAccessObject;
 
-    public AddRecipeView(AddRecipeController addRecipeController) {
-        this.addRecipeController = addRecipeController;
-
-        setTitle("Add Recipe");
+    public AddRecipeView(AddRecipeViewModel addRecipeViewModel, String username) {
+        try {
+            fileRecipeDataAccessObject = new FileRecipeDataAccessObject();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        final AddRecipePresenter addRecipePresenter = new AddRecipePresenter(addRecipeViewModel);
+        final RecipeInteractor recipeInteractor = new RecipeInteractor(fileRecipeDataAccessObject, addRecipePresenter);
+        this.addRecipeController = new AddRecipeController(recipeInteractor);
+        this.addRecipeViewModel = addRecipeViewModel;
+        setTitle("Create your own Recipe");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -72,9 +86,6 @@ public class AddRecipeView extends JFrame {
                     ingredients.add(new Ingredient(parts[0].trim(), parts[1].trim()));
                 }
 
-                LoggedInViewModel viewModel = new LoggedInViewModel();
-                LoggedInState state = viewModel.getState();
-                String username = state.getUsername();
                 addRecipeController.addRecipe(name, ingredients, instructions, username, "Local");
                 JOptionPane.showMessageDialog(this, "Recipe added successfully!");
                 dispose();
