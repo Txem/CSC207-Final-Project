@@ -230,23 +230,23 @@ public class AppBuilder {
 
         // Load the background image
         String imagePath = "img/image.jpg";
-        BufferedImage backgroundImage = null;
-        try {
-            backgroundImage = ImageIO.read(new File(imagePath));
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to load background image.");
-        }
-
-        // Get the image dimensions and set the frame size accordingly
-        if (backgroundImage != null) {
-            application.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
-            System.out.println("use image size");
-        }
-        else {
-            application.setSize(1024, 768); // Default size if image fails to load
-        }
+//        BufferedImage backgroundImage = null;
+//        try {
+//            backgroundImage = ImageIO.read(new File(imagePath));
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(null, "Failed to load background image.");
+//        }
+//
+//        // Get the image dimensions and set the frame size accordingly
+//        if (backgroundImage != null) {
+//            application.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
+//            System.out.println("use image size");
+//        }
+//        else {
+//            application.setSize(1024, 768); // Default size if image fails to load
+//        }
 
         application.setLocationRelativeTo(null); // Center the frame
 

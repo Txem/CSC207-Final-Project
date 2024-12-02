@@ -23,11 +23,6 @@ public class SearchEngineInteractor implements SearchEngineInputBoundary {
         final String keyword = searchEngineInputData.getKeyword();
         userDataAccessObject.setCurrentKeyword(keyword);
         userDataAccessObject.getRecipeList(keyword);
-//        if (userDataAccessObject.existByKeyword(keyword) == null) {
-//            final SearchEngineOutputData searchEngineOutputData = new SearchEngineOutputData(null,
-//                    true, keyword);
-//            searchEnginePresenter.prepareSuccessView(searchEngineOutputData);
-//        }
         if (!userDataAccessObject.existByKeyword(keyword)) {
             searchEnginePresenter.prepareErrorView(keyword + " can't be found in current database ");
         }

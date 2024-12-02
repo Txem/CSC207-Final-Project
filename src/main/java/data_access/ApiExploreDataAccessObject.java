@@ -60,6 +60,7 @@ public class ApiExploreDataAccessObject implements SearchEngineUserDataAccessInt
     @Override
     public List<CommonRecipe> getRecipeList(String keyword) {
         // Make an API call to get the user object.
+        recipes.clear();
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
                 .url(String.format("https://api.edamam.com/api/recipes/v2?type=public&q=%s&app_id=%s&app_key=%s",

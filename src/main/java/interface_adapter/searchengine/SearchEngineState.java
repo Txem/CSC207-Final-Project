@@ -24,9 +24,8 @@ public class SearchEngineState {
         return recipes;
     }
 
-    public List<CommonRecipe> setRecipes(List<CommonRecipe> recipes) {
+    public void setRecipes(List<CommonRecipe> recipes) {
         this.recipes = recipes;
-        return recipes;
     }
 
     public void setSearchError(String searchError) {
