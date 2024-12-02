@@ -14,17 +14,17 @@ public class StyledButton extends JButton {
         super(text);
 
         // Default colors
-        Color defaultColor = new Color(0, 123, 255); // Blue background
-        Color hoverColor = new Color(30, 144, 255); // Lighter blue on hover
-        Color pressedColor = new Color(0, 102, 204); // Darker blue when pressed
+        Color defaultColor = Color.gray;
+        Color hoverColor = new Color(135, 206, 250);
+        Color pressedColor = new Color(70, 130, 180);
 
         // Set default button styles
         setFont(new Font("Arial", Font.BOLD, 16)); // Default font size (smaller)
         setBackground(defaultColor); // Default background color
-        setForeground(Color.WHITE); // White text
+        setForeground(Color.DARK_GRAY); // White text
         setFocusPainted(false); // Remove focus painting
         setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.WHITE, 2), // White border
+                BorderFactory.createLineBorder(Color.DARK_GRAY, 2), // White border
                 BorderFactory.createEmptyBorder(10, 20, 10, 20) // Padding
         ));
         setCursor(new Cursor(Cursor.HAND_CURSOR)); // Hand cursor on hover

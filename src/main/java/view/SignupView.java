@@ -6,13 +6,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -249,6 +243,16 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
 //        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 //        title.setForeground(Color.WHITE);
 
+        // Add the title panel
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false); // Transparent panel
+        JLabel titleLabel = new JLabel("Genshin Recipe App", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+        titleLabel.setForeground(Color.white); // Change font color to black
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black background
         final LabelTextPanel usernameInfo = new LabelTextPanel(
                 new StyledLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
         final LabelTextPanel passwordInfo = new LabelTextPanel(
@@ -256,13 +260,6 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         final LabelTextPanel repeatPasswordInfo = new LabelTextPanel(
                 new StyledLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
 
-        // Create buttons with hover effects
-//        final JPanel buttons = new JPanel();
-//        buttons.setOpaque(false); // Transparent button container
-//        toLogin = createStyledButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
-//        buttons.add(toLogin);
-//        signUp = createStyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-//        buttons.add(signUp);
         final JPanel buttons = new JPanel();
         buttons.setOpaque(false);
         toLogin = new StyledButton(SignupViewModel.TO_LOGIN_BUTTON_LABEL);
@@ -280,12 +277,10 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         });
 
         toLogin.addActionListener(evt -> signupController.switchToLoginView());
-
+        add(titleLabel, BorderLayout.CENTER);
         addUsernameListener();
         addPasswordListener();
         addRepeatPasswordListener();
-        // Add components to panel
-//        add(title);
         add(usernameInfo);
         add(passwordInfo);
         add(repeatPasswordInfo);
@@ -297,13 +292,13 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setForeground(Color.WHITE); // Text color
-        button.setBackground(new Color(70, 130, 180)); // Default background color
+        button.setBackground(new Color(70, 130, 180));
         button.setOpaque(true);
         button.setBorderPainted(false);
         HoverEffect.apply(button,
-                new Color(70, 130, 180), // Default
-                new Color(30, 144, 255), // Hover
-                new Color(25, 25, 112)  // Pressed
+                new Color(70, 130, 180),
+                new Color(30, 144, 255),
+                new Color(25, 25, 112)
         );
         return button;
     }

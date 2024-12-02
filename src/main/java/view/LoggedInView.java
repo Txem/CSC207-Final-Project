@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -50,6 +51,13 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
         this.loggedInViewModel = loggedInViewModel;
 
         this.loggedInViewModel.addPropertyChangeListener(this);
+
+        JPanel titlePanel = new JPanel(new BorderLayout());
+        titlePanel.setOpaque(false); // Transparent panel
+        JLabel titleLabel = new JLabel("Recipe APP User Menu", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+        titleLabel.setForeground(Color.white); // Change font color to black
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         final LabelTextPanel passwordInfo = new LabelTextPanel(
                 new StyledLabel(loggedInViewModel.getState().getUsername() + " Want to change Password? "), passwordInputField);
@@ -160,11 +168,21 @@ public class LoggedInView extends JPanel implements PropertyChangeListener {
 //        this.add(title);
 //        this.add(usernameInfo);
 //        this.add(username);
-
+        this.add(titleLabel,BorderLayout.CENTER);
         this.add(passwordInfo);
         this.add(passwordErrorField);
         this.add(buttons);
         this.setOpaque(false);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        // Draw a semi-transparent background
+        g2d.setColor(new Color(0, 0, 0, 100)); // Black with 40% transparency
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
     }
 
     @Override

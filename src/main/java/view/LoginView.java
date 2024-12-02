@@ -1,17 +1,12 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -44,6 +39,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
 
+        JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
+        JLabel titleLabel = new JLabel("Genshin Recipe App", JLabel.CENTER);
+        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+        titleLabel.setForeground(Color.white); // Change font color to black
+        BorderFactory.createEmptyBorder(10, 20, 10, 20); // Padding
+
+
         final JLabel title = new JLabel("Login Screen");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -72,7 +75,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                             loginController.execute(
                                     currentState.getUsername(),
                                     currentState.getPassword()
-
                             );
                         }
                     }
@@ -142,6 +144,7 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
         });
 
 //        this.add(title);
+        this.add(titleLabel,BorderLayout.CENTER);
         this.add(usernameInfo);
         this.add(usernameErrorField);
         this.add(passwordInfo);
@@ -155,6 +158,16 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
      */
     public void actionPerformed(ActionEvent evt) {
         System.out.println("Click " + evt.getActionCommand());
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+        // Draw a semi-transparent background
+        g2d.setColor(new Color(0, 0, 0, 100)); // Black with 40% transparency
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.dispose();
     }
 
     @Override
