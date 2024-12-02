@@ -10,14 +10,8 @@ import java.awt.*;
  */
 class LabelTextPanel extends JPanel {
     LabelTextPanel(JLabel label, JTextField textField) {
-        JPanel panel = new JPanel();
-        panel.add(label);
-        panel.setBackground(new Color(173, 216, 230));
-        JPanel panel2 = new JPanel();
-        panel.add(textField);
-
-        this.add(panel);
-
+        this.add(label);
+        this.add(textField);
         this.setOpaque(false);
     }
 }

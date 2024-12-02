@@ -9,7 +9,7 @@ public class StyledLabel extends JLabel {
 
         setFont(new Font("Arial", Font.BOLD, 16));
 
-        setForeground(Color.DARK_GRAY);
+        setForeground(Color.WHITE);
 
         setHorizontalAlignment(SwingConstants.LEFT);
 

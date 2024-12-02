@@ -22,14 +22,8 @@ import interface_adapter.login.LoginViewModel;
 import interface_adapter.logout.LogoutController;
 import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.present_by_tag.PresentByTagController;
-import interface_adapter.present_by_tag.PresentByTagController;
-import interface_adapter.present_by_tag.PresentByTagPresenter;
 import interface_adapter.present_by_tag.PresentByTagPresenter;
 import interface_adapter.present_by_tag.PresentByTagViewModel;
-import interface_adapter.present_by_tag.PresentByTagViewModel;
-import interface_adapter.searchengine.SearchEngineController;
-import interface_adapter.searchengine.SearchEnginePresenter;
-import interface_adapter.searchengine.SearchEngineState;
 import interface_adapter.searchengine.SearchEngineViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
@@ -46,13 +40,9 @@ import use_case.logout.LogoutInputBoundary;
 import use_case.logout.LogoutInteractor;
 import use_case.logout.LogoutOutputBoundary;
 import use_case.present_by_tag.PresentByTagDataAccessInterface;
-import use_case.present_by_tag.PresentByTagDataAccessInterface;
 import use_case.present_by_tag.PresentByTagInputBoundary;
 import use_case.present_by_tag.PresentByTagInteractor;
 import use_case.present_by_tag.PresentByTagOutputBoundary;
-import use_case.search.SearchEngineInputBoundary;
-import use_case.search.SearchEngineInteractor;
-import use_case.search.SearchEngineOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
@@ -243,7 +233,8 @@ public class AppBuilder {
         BufferedImage backgroundImage = null;
         try {
             backgroundImage = ImageIO.read(new File(imagePath));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Failed to load background image.");
         }
@@ -252,7 +243,8 @@ public class AppBuilder {
         if (backgroundImage != null) {
             application.setSize(backgroundImage.getWidth(), backgroundImage.getHeight());
             System.out.println("use image size");
-        } else {
+        }
+        else {
             application.setSize(1024, 768); // Default size if image fails to load
         }
 
@@ -262,17 +254,17 @@ public class AppBuilder {
         BackgroundPanel mainPanel = new BackgroundPanel(imagePath);
         mainPanel.setLayout(new BorderLayout());
 
-        // Add the title panel
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.setOpaque(false); // Transparent panel
-        JLabel titleLabel = new JLabel("Welcome to Genshin Impact Recipe App", JLabel.CENTER);
-        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
-        titleLabel.setForeground(Color.BLACK); // Change font color to black
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        titlePanel.add(titleLabel, BorderLayout.CENTER);
-        titlePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black background
-        mainPanel.add(titlePanel, BorderLayout.NORTH);
+//        // Add the title panel
+//        JPanel titlePanel = new JPanel(new BorderLayout());
+//        titlePanel.setOpaque(false); // Transparent panel
+//        JLabel titleLabel = new JLabel("Welcome to Genshin Impact Recipe App", JLabel.CENTER);
+//        titleLabel.setFont(new Font("Serif", Font.BOLD, 48)); // Larger font size
+//        titleLabel.setForeground(Color.BLACK); // Change font color to black
+//        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+//
+//        titlePanel.add(titleLabel, BorderLayout.CENTER);
+//        titlePanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent black background
+//        mainPanel.add(titlePanel, BorderLayout.NORTH);
 
         // Add the card panel (transparent)
         cardPanel.setOpaque(false);
