@@ -1,100 +1,105 @@
-package use_case.addRecipe;
+package use_case.AddRecipe;
 
-import entity.Recipe;
+import entity.CommonRecipe;
+import entity.Ingredient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.Arrays;
-import java.util.List;
-import entity.Ingredient;
-import use_case.recipe.RecipeInteractor;
-import use_case.recipe.RecipeInputBoundary;
-import use_case.AddRecipe.RecipeInputData;
-import use_case.AddRecipe.RecipeOutputBoundary;
-import use_case.AddRecipe.RecipeOutputData;
-import use_case.AddRecipe.RecipeDataAccessInterface;
+import org.mockito.Mockito;
 
-public class RecipeInteractorTest {
-    private RecipeInteractor interactor;
-    private RecipeOutputBoundary outputBoundary;
-    private RecipeDataAccessInterface dataAccess;
+import java.util.Collections;
+
+import static org.mockito.Mockito.*;
+
+class AddRecipeInteractorTest {
+
+    private RecipeDataAccessInterface recipeDataAccessMock;
+    private RecipeOutputBoundary outputBoundaryMock;
+    private use_case.recipe.RecipeInteractor interactor;
 
     @BeforeEach
-    public void setUp() {
-        // Initialize the actual dependencies
-        outputBoundary = new RecipeOutputBoundary() {
-            @Override
-            public void presentSuccess(RecipeOutputData outputData) {
-                assertNotNull(outputData);
-            }
-
-            @Override
-            public void presentError(String errorMessage) {
-                assertNotNull(errorMessage);
-            }
-        };
-
-        dataAccess = new RecipeDataAccessInterface() {
-            @Override
-            public void saveRecipeForUser(Recipe recipe) {
-                // Simulate saving the recipe without error
-            }
-        };
-
-        // Initialize the interactor with actual dependencies
-        interactor = new RecipeInteractor(dataAccess, outputBoundary);
+    void setUp() {
+        recipeDataAccessMock = mock(RecipeDataAccessInterface.class);
+        outputBoundaryMock = mock(RecipeOutputBoundary.class);
+        interactor = new use_case.recipe.RecipeInteractor(recipeDataAccessMock, outputBoundaryMock);
     }
 
     @Test
-    public void testAddRecipeSuccess() {
-        // Create sample input data
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("Tomato", "2 pieces"),
-                new Ingredient("Pasta", "200g"),
-                new Ingredient("Cheese", "100g")
+    void execute_successfulAdd() {
+        // Arrange
+        RecipeInputData inputData = new RecipeInputData(
+                "Pasta",
+                Collections.singletonList(new Ingredient("Tomato", "2")),
+                "Boil pasta. Add sauce.",
+                "testUser",
+                "local"
         );
-        RecipeInputData inputData = new RecipeInputData("Pasta", ingredients, "Boil pasta, add sauce", "user123", "local");
 
-        // Call the method under test
+        // Act
         interactor.execute(inputData);
+
+        // Assert
+        verify(recipeDataAccessMock, times(1)).saveRecipeForUser(any(CommonRecipe.class));
+        verify(outputBoundaryMock, times(1)).presentSuccess(new RecipeOutputData("Recipe added successfully", true));
+        verifyNoMoreInteractions(recipeDataAccessMock, outputBoundaryMock);
     }
 
     @Test
-    public void testAddRecipeFailureDueToEmptyName() {
-        // Create sample input data with empty recipe name
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("Tomato", "2 pieces"),
-                new Ingredient("Pasta", "200g"),
-                new Ingredient("Cheese", "100g")
+    void execute_failureToAddRecipe() {
+        // Arrange
+        RecipeInputData inputData = new RecipeInputData(
+                "Pasta",
+                Collections.singletonList(new Ingredient("Tomato", "2")),
+                "Boil pasta. Add sauce.",
+                "testUser",
+                "local"
         );
-        RecipeInputData inputData = new RecipeInputData("", ingredients, "Boil pasta, add sauce", "user123", "local");
 
-        // Call the method under test
+        doThrow(new RuntimeException("Database error")).when(recipeDataAccessMock).saveRecipeForUser(any(CommonRecipe.class));
+
+        // Act
         interactor.execute(inputData);
+
+        // Assert
+        verify(recipeDataAccessMock, times(1)).saveRecipeForUser(any(CommonRecipe.class));
+        verify(outputBoundaryMock, times(1)).presentError("Failed to add recipe: Database error");
+        verifyNoMoreInteractions(recipeDataAccessMock, outputBoundaryMock);
     }
 
     @Test
-    public void testAddRecipeDataAccessError() {
-        // Create sample input data
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("Tomato", "2 pieces"),
-                new Ingredient("Pasta", "200g"),
-                new Ingredient("Cheese", "100g")
+    void execute_nullRecipeName() {
+        // Arrange
+        RecipeInputData inputData = new RecipeInputData(
+                null,
+                Collections.singletonList(new Ingredient("Tomato", "2")),
+                "Boil pasta. Add sauce.",
+                "testUser",
+                "local"
         );
-        RecipeInputData inputData = new RecipeInputData("Pasta", ingredients, "Boil pasta, add sauce", "user123", "local");
 
-        // Override the dataAccess to simulate an error
-        dataAccess = new RecipeDataAccessInterface() {
-            @Override
-            public void saveRecipeForUser(Recipe recipe) {
-                throw new RuntimeException("Database error");
-            }
-        };
-
-        // Reinitialize the interactor with the new dataAccess
-        interactor = new RecipeInteractor(dataAccess, outputBoundary);
-
-        // Call the method under test
+        // Act
         interactor.execute(inputData);
+
+        // Assert
+        verify(outputBoundaryMock, times(1)).presentError("Failed to add recipe: Recipe name is required.");
+        verifyNoInteractions(recipeDataAccessMock);
+    }
+
+    @Test
+    void execute_emptyIngredients() {
+        // Arrange
+        RecipeInputData inputData = new RecipeInputData(
+                "Pasta",
+                Collections.emptyList(),
+                "Boil pasta. Add sauce.",
+                "testUser",
+                "local"
+        );
+
+        // Act
+        interactor.execute(inputData);
+
+        // Assert
+        verify(outputBoundaryMock, times(1)).presentError("Failed to add recipe: Ingredients are required.");
+        verifyNoInteractions(recipeDataAccessMock);
     }
 }
