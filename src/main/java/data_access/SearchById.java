@@ -106,8 +106,6 @@ public class SearchById implements FavoriteUserDataAccessInterface {
         }
     }
 
-    private static final String RECIPE_FILE = "src/recipe.json";
-
     /**
      * Check if a user has already saved the same recipe.
      *
@@ -147,9 +145,6 @@ public class SearchById implements FavoriteUserDataAccessInterface {
      */
     private JSONObject readJsonFile() throws IOException, JSONException {
         java.io.File file = new java.io.File(OUTPUT_FILE);
-        if (!file.exists()) {
-            return null;
-        }
 
         // Read the file content
         StringBuilder fileData = new StringBuilder();
