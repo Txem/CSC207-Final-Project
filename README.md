@@ -12,6 +12,7 @@ Domain: Recipe Organizer, Management, and Recommendation
 - [Contributors](#contributors)
 - [Features](#features)
 - [Installation Instructions](#installation-instructions)
+- [Usage Guide](#usage-guide)
 - [Entities](#entities)
 - [License](#license)
 - [Feedback](#feedback)
@@ -39,22 +40,69 @@ The app provides many usages such as:
 **Software Requirements**: A computer with IntelliJ IDEA (community or professional) installed and minimum Java8 (preferably more recent versions)
 
 1) Clone the repository from GitHub. This can be done two ways.
-    - Through IntelliJ IDEA by following the steps:
-        - Navigate to the right page: Projects > Get from VCS > Repository URL
-        - Enter the git repository URL in the "URL" text field:
-      ```bash
-         https://github.com/Txem/CSC207-Final-Project.git
-      ```
-        - Click on the "Clone" clone button
+   - Through IntelliJ IDEA by following the steps:
+      - Navigate to the right page: Projects > Get from VCS > Repository URL
+      - Enter the git repository URL in the "URL" text field:
+     ```bash
+        https://github.com/Txem/CSC207-Final-Project.git
+     ```
+      - Click on the "Clone" clone button
 
-    - Through terminal by entering the following:
-      ```bash
-      git clone https://github.com/Txem/CSC207-Final-Project.git
-      ```
+   - Through terminal by entering the following:
+     ```bash
+     git clone https://github.com/Txem/CSC207-Final-Project.git
+     ```
 2) Open the project on the IntelliJ IDEA.
 3) Navigate to the "Main" file found in the "app" folder by following the steps:
-    - csc207-final-project [homework-5] > src > main > java > app > Main.java
+   - csc207-final-project [homework-5] > src > main > java > app > Main.java
+4) Navigate to the Edit Configurations, set the environment variable to be "token= your Adamam API app key"
+5) Replace the appid in data_access/ApiExploreDataAccessObject.java by your app key
 6) Run the app!
+
+## Usage Guide
+- Run **Main** to start the program.
+
+### Sign up
+![Sign up page](img/sign up page.png)
+- Sign up an account by entering your information and click the **Sign up** button.  
+
+- If you already have an account, click **to Login** to continue.
+
+### Log in
+![login](img/login.png)
+- Enter your username and password that you created preciously and click **log in**.  
+
+- You can also close the app by clicking cancel.
+
+### Logged in
+![loggedin](img/loggedin.png)
+- Once logged in this should be the page you see
+
+### Create your own recipe
+![create](img/create.png)
+- Create your own recipe by entering the right information and click on **submit** once done.  
+
+- You can delete this recipe by clicking on **cancel**.
+
+### Searching recipes
+![search](img/search.png)
+- Explore recipes by a keyword in the search bar at the top and click **search**.  
+
+- Scroll using the bar at the right to explore more related recipes.  
+
+- Click on the image if you want to see the full recipe.  
+
+- If you are interested in a recipe, click on **Download** to save it.
+
+### Present by Tag
+![local](img/local.png)
+- Enter "Local" to display all the recipes you create.
+- Enter "favorite" to display all the downloaded recipes.
+- Alternatively, you can click on **Favorite** to display all the downloaded recipes.
+
+### Change Password
+![logged](img/loggedin.png)
+- Change your password by entering your new password in the input field and click on **Change Password** to save the changes.
 
 ## Entities
 
