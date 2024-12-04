@@ -63,7 +63,7 @@ The app provides many usages such as:
 - Run **Main** to start the program.
 
 ### Sign up
-![Sign up page](img/sign up page.png)
+![Sign up page](img/signup.png)
 - Sign up an account by entering your information and click the **Sign up** button.  
 
 - If you already have an account, click **to Login** to continue.
